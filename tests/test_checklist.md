@@ -14,11 +14,11 @@ A conferência abaixo separa revisão de código, testes automatizados executado
 
 ## Testes automatizados executados
 
-O workflow do GitHub Actions [43461490652](https://github.com/arthurgimax/JIF-/actions/runs/43461490652) foi concluído com sucesso em 13/11/2026, no commit 21128e071c72d394dd39d62e2c7f73ee8d90a086.
+O workflow do GitHub Actions [43462038217](https://github.com/arthurgimax/JIF-/actions/runs/43462038217) foi concluído com sucesso em 13/11/2026, no commit f8fdacfde7ace2ca41b8843b754f065654c19e1b.
 
 - Ambiente: PHP 8.4 e MySQL 8.0.46.
 - Verificação de sintaxe PHP: aprovada.
-- Preparação do banco MySQL e importação do schema/seed: aprovadas.
+- Execução do instalador database/setup.php, criação/verificação do banco e aplicação do schema/seed: aprovadas.
 - Teste de conexão e leitura das tabelas: aprovado.
 - Teste de autenticação e RBAC: aprovado.
 - Suíte CA01–CA17: **17 de 17 critérios aprovados**.
