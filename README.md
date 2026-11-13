@@ -98,40 +98,22 @@ O projeto foi construído em estrito cumprimento à especificação oficial ([`s
 
 ## 🚀 Como Executar o Projeto Localmente
 
-### Pré-requisitos:
-- PHP 8.2 ou superior instalado (disponível no XAMPP em `C:\xampp\php\php.exe`).
-- Servidor web Apache (XAMPP) ou o servidor embutido do PHP.
-- MySQL ou MariaDB para a instalação principal no XAMPP; SQLite é uma contingência local quando o driver PDO_SQLite estiver disponível.
+O guia completo e oficial de instalação está na seção **15 — Instalação e execução** do arquivo [spec.md](./spec.md). Ele foi escrito para que outra pessoa consiga clonar o repositório e executar o sistema em um computador Windows com XAMPP.
 
-### Passo a Passo:
+Resumo dos comandos no PowerShell:
 
-1. **Configurar as Variáveis de Ambiente**:
-   Copie o arquivo `.env.example` para `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   *(As configurações padrão já estão pré-configuradas para o ambiente local do XAMPP).*
+~~~powershell
+Set-Location C:\xampp\htdocs
+git clone https://github.com/arthurgimax/JIF-.git
+Set-Location .\JIF-
+Copy-Item .env.example .env
+# Edite .env com os dados do MySQL local
+# Inicie Apache e MySQL no XAMPP Control Panel
+& "C:\xampp\php\php.exe" .\database\setup.php
+~~~
 
-2. **Inicializar o Banco de Dados (Schema + Seed local)**:
-   Execute o script somente pelo terminal (o acesso via navegador é bloqueado por segurança):
-   ```bash
-   C:\xampp\php\php.exe database/setup.php
-   ```
-   O schema usa `CREATE TABLE IF NOT EXISTS` e não apaga tabelas/dados existentes. O seed é inserido apenas quando o banco ainda não contém usuários.
+Depois, abra http://localhost/JIF-/ no navegador. O instalador cria o banco jif_plus, verifica as 10 tabelas e insere dados de demonstração somente quando ainda não há usuários. Não há dependências Composer ou npm. Para criar o primeiro administrador de teste, consulte a seção seguinte e o passo a passo detalhado da spec.
 
-3. **Criar o primeiro administrador**: siga a seção “Primeiro administrador e contas de demonstração” abaixo. As contas de demonstração do seed são inativas.
-
-4. **Iniciar a Aplicação**:
-   - **Pelo XAMPP**: Coloque a pasta em `c:\xampp\htdocs\`, inicie o Apache no painel de controle e acesse:
-     `http://localhost/4°Bim%20-%20Arthur%20Gimax%20-%20JIF+/`
-   - **Pelo Servidor Embutido do PHP**:
-     Execute no terminal dentro da pasta do projeto:
-     ```bash
-     C:\xampp\php\php.exe -S localhost:8000
-     ```
-     E abra no navegador: `http://localhost:8000`.
-
----
 
 ## 🔐 Primeiro administrador e contas de demonstração
 
