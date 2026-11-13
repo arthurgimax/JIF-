@@ -1,3 +1,19 @@
+## [1.0.8-ci] — 13/11/2026 — Aprovação da suíte automatizada CA01–CA17
+
+### Validação executada
+- GitHub Actions workflow [43461490652](https://github.com/arthurgimax/JIF-/actions/runs/43461490652) concluído com sucesso no commit 21128e071c72d394dd39d62e2c7f73ee8d90a086.
+- Ambiente de CI: PHP 8.4 e MySQL 8.0.46.
+- Verificação de sintaxe PHP: aprovada.
+- Preparação do banco, teste de conexão/tabelas e teste de autenticação/RBAC: aprovados.
+- Suíte completa: 17 de 17 critérios CA01–CA17 aprovados, conforme log do job.
+
+### Revisão humana e atualização documental
+- Atualizados spec.md, README.md e tests/test_checklist.md para registrar o resultado real do CI, sem confundir aprovação dos critérios de aceite com conformidade integral do Anexo B.
+- Mantidas como pendências a limpeza dos valores antigos de demonstração no histórico Git, a verificação externa de bloqueio de arquivos internos, a homologação RBAC no servidor publicado e a revisão integral de formulários/CSRF/limitação de tentativas.
+- A instalação em computador limpo ainda precisa ser executada por uma pessoa externa seguindo exclusivamente a seção 15 da spec.
+
+---
+
 ## [1.0.7-install] — 13/11/2026 — Guia reproduzível de instalação local
 
 ### Documentação adicionada e revisada
