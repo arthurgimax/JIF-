@@ -524,10 +524,8 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 | Versão | Data | Autor | Resumo das Modificações e Evoluções Registradas |
 | :---: | :---: | :--- | :--- |
 | **0.1** | Outubro de 2026 | Arthur Henrique Gimax Oliveira | Elaboração da proposta preliminar do sistema esportivo, identificação do problema e formulação dos objetivos iniciais. |
-| **0.5** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Definição da stack tecnológica oficial (PHP 8.2+, MySQL InnoDB, PDO), detalhamento dos requisitos RF01 a RF17, modelagem das 10 tabelas relacionais e estruturação do DER em Mermaid. |
-| **1.0** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Registro original da implementação e dos critérios CA01 a CA17. A alegação de aprovação integral registrada na versão original não foi reexecutada nesta auditoria. |
-| **1.0.2** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Revisão de publicação: correção de cadastro de perfis, desativação de contas seed, schema não destrutivo, instalador CLI, variáveis de ambiente e checklist do Anexo B. Deploy e testes de integração permanecem pendentes.
-| **1.0.3** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Correção da suíte de testes identificada pela integração contínua, com substituição de placeholders PDO duplicados. |
-| **1.0.4** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Publicação manual no InfinityFree; login administrativo e fluxo de cadastro/consulta de atleta confirmados. HTTPS, suíte automatizada completa e revisão do histórico Git permanecem pendentes. |
+| **0.5** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Definição da stack PHP 8.2+, MySQL InnoDB e PDO; detalhamento dos requisitos RF01 a RF17, modelagem das 10 tabelas e estruturação do DER. |
+| **1.0** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Registro original da implementação e dos critérios CA01 a CA17. A alegação de aprovação integral não foi considerada validada sem reexecução. |
+| **1.0.2** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Revisão de segurança: cadastro público limitado ao perfil atleta, contas seed desativadas, schema não destrutivo, instalador CLI, variáveis de ambiente e checklist do Anexo B. |
 | **1.0.3** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Correção da suíte de testes identificada pela integração contínua, com substituição de placeholders PDO duplicados. |
 | **1.0.4** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Publicação manual no InfinityFree; login administrativo e fluxo de cadastro/consulta de atleta confirmados. HTTPS, suíte automatizada completa e revisão do histórico Git permanecem pendentes. |
