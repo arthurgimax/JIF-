@@ -214,7 +214,7 @@ O JIF+ foi publicado no InfinityFree para esta atividade, mantendo a stack origi
 ### Segurança e testes pendentes
 
 - O `.gitignore` exclui `.env` e arquivos locais de banco; o `.htaccess` contém regras para negar acesso direto a arquivos de ambiente e pastas internas. Ainda é necessário confirmar externamente que essas URLs retornam bloqueio (403/404), sem exibir conteúdo.
-- O histórico público contém credenciais antigas de demonstração e um `SESSION_SECRET` estático de exemplo em um commit anterior. A versão atual do seed desativa as contas de demonstração, mas é necessário conferir no banco de produção que todas permanecem inativas e decidir a limpeza do histórico ou a restrição do repositório com acesso do professor.
+- O histórico público contém credenciais antigas de demonstração e um `SESSION_SECRET` estático de exemplo em um commit anterior. O responsável informou que desativou os cinco usuários demonstrativos adicionais no painel de produção, preservando a conta principal; falta confirmar o estado após a ação. As credenciais de demonstração e o segredo de exemplo que aparecem em commits antigos continuam no histórico público e exigem limpeza do histórico ou restrição do repositório com acesso do professor.
 - A suíte automatizada de 17 critérios não foi executada nesta homologação; os testes manuais não substituem a execução completa.
 - O checklist em [`tests/test_checklist.md`](./tests/test_checklist.md) registra o que foi verificado e as pendências: TLS/HTTPS, histórico Git, teste de permissões com perfil não administrador, validação completa dos formulários, proteção CSRF e limitação de tentativas de login.
 
