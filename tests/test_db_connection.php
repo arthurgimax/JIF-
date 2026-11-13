@@ -29,7 +29,7 @@ try {
 
     echo "------------------------------------------------------------\n";
     echo "Total de registros validados: {$totalGeral}\n";
-    echo "STATUS: CONEXÃO E ESTRUTURA RELACIONAL 100% OPERACIONAIS!\n";
+    echo "STATUS: conexão e presença das tabelas verificadas; execute a suíte completa para validar os fluxos.\n";
     echo "============================================================\n";
 
 } catch (Exception $e) {

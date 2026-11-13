@@ -1,29 +1,15 @@
 -- =====================================================================
 -- JIF+ — Plataforma de Gestão e Inteligência Esportiva
 -- Esquema Oficial do Banco de Dados Relacional (MySQL / MariaDB)
--- Especificação Técnica: spec.md (Seção 6) | Mecanismo: InnoDB
+-- Compatível com InfinityFree e Provedores de Hospedagem Compartilhada
+-- Especificação Técnica: spec.md | Mecanismo: InnoDB
 -- =====================================================================
 
-CREATE DATABASE IF NOT EXISTS `jif_plus` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `jif_plus`;
+-- O schema é não destrutivo: não apaga tabelas nem dados existentes.
 
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE IF EXISTS `estatisticas_equipes`;
-DROP TABLE IF EXISTS `estatisticas_atletas`;
-DROP TABLE IF EXISTS `partidas`;
-DROP TABLE IF EXISTS `equipe_atletas`;
-DROP TABLE IF EXISTS `atletas`;
-DROP TABLE IF EXISTS `equipes`;
-DROP TABLE IF EXISTS `modalidades`;
-DROP TABLE IF EXISTS `competicoes`;
-DROP TABLE IF EXISTS `instituicoes`;
-DROP TABLE IF EXISTS `usuarios`;
-
-SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. TABELA DE USUÁRIOS E PERFIS DE ACESSO (RBAC)
-CREATE TABLE `usuarios` (
+CREATE TABLE IF NOT EXISTS `usuarios` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `nome` VARCHAR(150) NOT NULL,
     `email` VARCHAR(150) NOT NULL UNIQUE,
@@ -36,7 +22,7 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. TABELA DE INSTITUIÇÕES E CAMPI
-CREATE TABLE `instituicoes` (
+CREATE TABLE IF NOT EXISTS `instituicoes` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `nome` VARCHAR(150) NOT NULL,
     `sigla` VARCHAR(30) NOT NULL,
@@ -47,7 +33,7 @@ CREATE TABLE `instituicoes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 3. TABELA DE COMPETIÇÕES
-CREATE TABLE `competicoes` (
+CREATE TABLE IF NOT EXISTS `competicoes` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `instituicao_organizadora_id` INT NOT NULL,
     `nome` VARCHAR(150) NOT NULL,
@@ -65,7 +51,7 @@ CREATE TABLE `competicoes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 4. TABELA DE MODALIDADES ESPORTIVAS
-CREATE TABLE `modalidades` (
+CREATE TABLE IF NOT EXISTS `modalidades` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `competicao_id` INT NOT NULL,
     `nome` VARCHAR(100) NOT NULL,
@@ -80,7 +66,7 @@ CREATE TABLE `modalidades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 5. TABELA DE EQUIPES
-CREATE TABLE `equipes` (
+CREATE TABLE IF NOT EXISTS `equipes` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `instituicao_id` INT NOT NULL,
     `competicao_id` INT NOT NULL,
@@ -103,7 +89,7 @@ CREATE TABLE `equipes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 6. TABELA DE ATLETAS
-CREATE TABLE `atletas` (
+CREATE TABLE IF NOT EXISTS `atletas` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `usuario_id` INT NULL,
     `instituicao_id` INT NOT NULL,
@@ -123,7 +109,7 @@ CREATE TABLE `atletas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 7. TABELA DE VÍNCULO EQUIPE-ATLETA (INSCRIÇÃO)
-CREATE TABLE `equipe_atletas` (
+CREATE TABLE IF NOT EXISTS `equipe_atletas` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `equipe_id` INT NOT NULL,
     `atleta_id` INT NOT NULL,
@@ -140,7 +126,7 @@ CREATE TABLE `equipe_atletas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 8. TABELA DE PARTIDAS
-CREATE TABLE `partidas` (
+CREATE TABLE IF NOT EXISTS `partidas` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `competicao_id` INT NOT NULL,
     `modalidade_id` INT NOT NULL,
@@ -169,7 +155,7 @@ CREATE TABLE `partidas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 9. TABELA DE ESTATÍSTICAS INDIVIDUAIS DE ATLETAS
-CREATE TABLE `estatisticas_atletas` (
+CREATE TABLE IF NOT EXISTS `estatisticas_atletas` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `partida_id` INT NOT NULL,
     `atleta_id` INT NOT NULL,
@@ -189,7 +175,7 @@ CREATE TABLE `estatisticas_atletas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 10. TABELA DE ESTATÍSTICAS COLETIVAS DE EQUIPES
-CREATE TABLE `estatisticas_equipes` (
+CREATE TABLE IF NOT EXISTS `estatisticas_equipes` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `partida_id` INT NOT NULL,
     `equipe_id` INT NOT NULL,

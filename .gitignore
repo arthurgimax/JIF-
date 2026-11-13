@@ -1,6 +1,15 @@
 # Arquivos de ambiente e credenciais locais (Anexo B)
 .env
+.env.*
+!.env.example
 config.local.php
+
+# Bancos de dados locais de desenvolvimento (não enviar para repo público)
+*.sqlite
+*.sqlite3
+*.db
+database/*.sqlite
+database/*.sqlite-*
 
 # Arquivos temporários e logs
 *.log

@@ -35,84 +35,140 @@ class Database {
 
     /**
      * Inicializa a conexão com o banco de dados.
+     * Em produção, exige MySQL/MariaDB configurado e nunca cai silenciosamente em SQLite.
+     * O fallback SQLite existe somente para desenvolvimento local.
      */
     private static function connect(): void {
         $env = self::loadEnv();
+        $appEnv = strtolower(trim((string)($env['APP_ENV'] ?? 'development')));
+        $isProduction = in_array($appEnv, ['production', 'prod'], true);
 
-        $host = $env['DB_HOST'] ?? '127.0.0.1';
-        $port = $env['DB_PORT'] ?? 3306;
-        $dbName = $env['DB_NAME'] ?? 'jif_plus';
-        $user = $env['DB_USER'] ?? 'root';
-        $pass = $env['DB_PASS'] ?? '';
+        $host = trim((string)($env['DB_HOST'] ?? '127.0.0.1'));
+        $port = (int)($env['DB_PORT'] ?? 3306);
+        $dbName = trim((string)($env['DB_NAME'] ?? 'jif_plus'));
+        $user = trim((string)($env['DB_USER'] ?? 'root'));
+        $pass = (string)($env['DB_PASS'] ?? '');
+        $charset = (string)($env['DB_CHARSET'] ?? 'utf8mb4');
+
+        // Evita inserir parâmetros inesperados na DSN.
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $charset)) {
+            $charset = 'utf8mb4';
+        }
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $host) || !preg_match('/^[A-Za-z0-9_]+$/', $dbName)) {
+            error_log('JIF+: host ou nome de banco possui caracteres inválidos.');
+            http_response_code(503);
+            exit('A configuração do banco de dados é inválida.');
+        }
+        if ($port < 1 || $port > 65535) {
+            $port = 3306;
+        }
+
+        if ($isProduction) {
+            $requiredKeys = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'];
+            foreach ($requiredKeys as $requiredKey) {
+                if (!isset($env[$requiredKey]) || trim((string)$env[$requiredKey]) === '') {
+                    error_log('JIF+: variável obrigatória de banco ausente em produção: ' . $requiredKey);
+                    http_response_code(503);
+                    exit('O sistema está temporariamente indisponível. A configuração do banco de dados precisa ser verificada.');
+                }
+            }
+        }
 
         try {
-            // Tentativa de conexão principal com MySQL / MariaDB (conforme spec.md)
-            $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset=utf8mb4";
+            $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset={$charset}";
             $pdo = new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false, // Segurança contra SQL Injection (RNF03)
-                PDO::ATTR_TIMEOUT => 2
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_TIMEOUT => 5,
             ]);
 
             self::$instance = $pdo;
             self::$driver = 'mysql';
             self::$isFallback = false;
-
+            return;
         } catch (PDOException $e) {
-            // Em caso de credencial pendente no MySQL local, ativa contingência SQLite
-            // para que a aplicação e os fluxos permaneçam 100% funcionais no desenvolvimento
-            $sqlitePath = __DIR__ . '/../database/jif_plus.sqlite';
-            $needsInit = !file_exists($sqlitePath);
+            error_log('JIF+: falha na conexão MySQL: ' . $e->getMessage());
 
-            try {
-                $pdo = new PDO("sqlite:{$sqlitePath}", null, null, [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false
-                ]);
-                $pdo->exec("PRAGMA foreign_keys = ON;");
-
-                self::$instance = $pdo;
-                self::$driver = 'sqlite';
-                self::$isFallback = true;
-
-                if ($needsInit) {
-                    self::initializeFallbackDatabase($pdo);
-                }
-
-            } catch (Exception $fallbackError) {
-                // Tratamento seguro sem expor credenciais em tela (RNF07)
-                error_log("Erro de Conexão com Banco de Dados: " . $e->getMessage());
-                die("<div style='font-family:sans-serif;padding:30px;background:#fff2f2;border:1px solid #ffcccc;border-radius:8px;max-width:600px;margin:50px auto;'>"
-                    . "<h3 style='color:#cc0000;margin-top:0;'>Erro de Conexão com o Banco de Dados</h3>"
-                    . "<p>Não foi possível estabelecer conexão com o MySQL e o banco local de contingência não pôde ser iniciado.</p>"
-                    . "<p style='color:#666;font-size:13px;'>Verifique as credenciais no arquivo <code>.env</code> ou inicie o serviço MySQL.</p>"
-                    . "</div>");
+            // Não permite que uma falha de configuração em produção crie um banco vazio/local.
+            if ($isProduction) {
+                http_response_code(503);
+                exit('Não foi possível conectar ao banco de dados. Verifique as variáveis de ambiente do servidor.');
             }
+        }
+
+        // Contingência SQLite restrita ao ambiente de desenvolvimento.
+        $sqlitePath = __DIR__ . '/../database/jif_plus.sqlite';
+        $needsInit = !file_exists($sqlitePath);
+
+        try {
+            $pdo = new PDO("sqlite:{$sqlitePath}", null, null, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
+            $pdo->exec('PRAGMA foreign_keys = ON;');
+
+            self::$instance = $pdo;
+            self::$driver = 'sqlite';
+            self::$isFallback = true;
+
+            if ($needsInit) {
+                self::initializeFallbackDatabase($pdo);
+            }
+        } catch (Throwable $fallbackError) {
+            error_log('JIF+: falha no banco SQLite local: ' . $fallbackError->getMessage());
+            http_response_code(500);
+            exit('Não foi possível iniciar o banco de dados local. Verifique as extensões PDO instaladas no PHP.');
         }
     }
 
     /**
-     * Carrega as variáveis de ambiente do arquivo .env.
+     * Carrega configurações de .env/config.local.php e, por último, variáveis do servidor.
+     * Variáveis de ambiente do provedor sempre têm prioridade.
      */
     private static function loadEnv(): array {
-        $envFile = __DIR__ . '/../.env';
         $env = [];
 
-        if (file_exists($envFile)) {
-            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $envFile = __DIR__ . '/../.env';
+        if (is_file($envFile) && is_readable($envFile)) {
+            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
             foreach ($lines as $line) {
                 $line = trim($line);
-                if ($line === '' || str_starts_with($line, '#')) continue;
-                if (strpos($line, '=') !== false) {
-                    list($k, $v) = explode('=', $line, 2);
-                    $k = trim($k);
-                    $v = trim($v, " \t\n\r\0\x0B\"'");
-                    $env[$k] = $v;
+                if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
+                    continue;
+                }
+                [$key, $value] = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                if ($key !== '') {
+                    $env[$key] = trim($value, " \t\n\r\0\x0B\"'");
                 }
             }
         }
+
+        $localConfigFile = __DIR__ . '/../config.local.php';
+        if (is_file($localConfigFile)) {
+            $localConfig = include $localConfigFile;
+            if (is_array($localConfig)) {
+                $env = array_merge($env, $localConfig);
+            }
+        }
+
+        $keys = [
+            'APP_ENV', 'APP_NAME', 'APP_URL', 'SESSION_SECRET',
+            'DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASS', 'DB_CHARSET',
+        ];
+        foreach ($keys as $key) {
+            $value = getenv($key);
+            if ($value === false || $value === '') {
+                $value = $_ENV[$key] ?? $_SERVER[$key] ?? null;
+            }
+            if ($value !== null && $value !== '') {
+                $env[$key] = $value;
+            }
+        }
+
         return $env;
     }
 

@@ -7,6 +7,18 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/auth.php';
 
 $pdo = Database::getConnection();
+$pdo->beginTransaction();
+
+// Usuário administrador temporário: credenciais aleatórias geradas apenas durante o teste.
+$testAdminEmail = 'admin.teste.' . bin2hex(random_bytes(6)) . '@example.test';
+$testAdminPassword = bin2hex(random_bytes(16));
+$stmtAdmin = $pdo->prepare("INSERT INTO usuarios (nome, email, senha_hash, perfil, ativo) VALUES (:nome, :email, :hash, 'admin', 1)");
+$stmtAdmin->execute([
+    ':nome' => 'Administrador de Teste',
+    ':email' => $testAdminEmail,
+    ':hash' => password_hash($testAdminPassword, PASSWORD_BCRYPT),
+]);
+$testAdminId = (int)$pdo->lastInsertId();
 
 echo "======================================================================\n";
 echo "   JIF+ — SUÍTE DE TESTES AUTOMATIZADOS (CRITÉRIOS DE ACEITE CA01-CA17)\n";
@@ -27,8 +39,11 @@ function assertTest(bool $condicao, string $criterio, string $descricao): void {
 
 // CA01: Cadastro de usuário com hash bcrypt
 $novoEmail = 'atleta.teste.' . time() . '@calama.ifro.edu.br';
-$resCad = cadastrarUsuario('Atleta Automatizado', $novoEmail, 'senhaForte123', 'atleta');
-assertTest($resCad['sucesso'] === true, 'CA01', 'Cadastro de usuário com hash bcrypt e persistência');
+$resCad = cadastrarUsuario('Atleta Automatizado', $novoEmail, 'senhaForte123', 'admin');
+$stmtPerfilCadastro = $pdo->prepare('SELECT perfil FROM usuarios WHERE email = :email');
+$stmtPerfilCadastro->execute([':email' => $novoEmail]);
+$perfilCadastro = $stmtPerfilCadastro->fetchColumn();
+assertTest($resCad['sucesso'] === true && $perfilCadastro === 'atleta', 'CA01', 'Cadastro com hash bcrypt e perfil público limitado a atleta');
 
 // CA02: Login e validação de credenciais
 $resLoginOk = autenticarUsuario($novoEmail, 'senhaForte123');
@@ -36,7 +51,7 @@ $resLoginErr = autenticarUsuario($novoEmail, 'senha_errada');
 assertTest($resLoginOk['sucesso'] === true && $resLoginErr['sucesso'] === false, 'CA02', 'Login com credenciais válidas e rejeição de senha incorreta');
 
 // CA03: Controle de perfis RBAC
-$userAdmin = autenticarUsuario('admin@jif.ifro.edu.br', 'admin123');
+$userAdmin = autenticarUsuario($testAdminEmail, $testAdminPassword);
 $permiteAdmin = verificarPerfil(['organizador']); // admin possui acesso geral
 $userAtleta = autenticarUsuario($novoEmail, 'senhaForte123');
 $bloqueiaAtleta = !verificarPerfil(['organizador', 'admin']);
@@ -64,12 +79,12 @@ $checkMod = $pdo->query("SELECT id FROM modalidades WHERE id = {$idMod}")->fetch
 assertTest(!empty($checkMod), 'CA06', 'Cadastro de modalidade esportiva vinculada à competição');
 
 // CA07: Gestão de Equipes
-$stmtEqA = $pdo->prepare("INSERT INTO equipes (instituicao_id, competicao_id, modalidade_id, responsavel_id, nome) VALUES (:inst, :comp, :mod, 1, 'Equipe Alpha')");
-$stmtEqA->execute([':inst' => $idCampus, ':comp' => $idComp, ':mod' => $idMod]);
+$stmtEqA = $pdo->prepare("INSERT INTO equipes (instituicao_id, competicao_id, modalidade_id, responsavel_id, nome) VALUES (:inst, :comp, :mod, :responsavel, 'Equipe Alpha')");
+$stmtEqA->execute([':inst' => $idCampus, ':comp' => $idComp, ':mod' => $idMod, ':responsavel' => $testAdminId]);
 $idEqA = $pdo->lastInsertId();
 
-$stmtEqB = $pdo->prepare("INSERT INTO equipes (instituicao_id, competicao_id, modalidade_id, responsavel_id, nome) VALUES (:inst, :comp, :mod, 1, 'Equipe Beta')");
-$stmtEqB->execute([':inst' => $idCampus, ':comp' => $idComp, ':mod' => $idMod]);
+$stmtEqB = $pdo->prepare("INSERT INTO equipes (instituicao_id, competicao_id, modalidade_id, responsavel_id, nome) VALUES (:inst, :comp, :mod, :responsavel, 'Equipe Beta')");
+$stmtEqB->execute([':inst' => $idCampus, ':comp' => $idComp, ':mod' => $idMod, ':responsavel' => $testAdminId]);
 $idEqB = $pdo->lastInsertId();
 assertTest($idEqA > 0 && $idEqB > 0, 'CA07', 'Cadastro de equipes com relacionamentos de instituição, competição e modalidade');
 
@@ -130,12 +145,18 @@ $resInvalido = cadastrarUsuario('Teste', $emailInvalido, '123456');
 assertTest($resInvalido['sucesso'] === false, 'CA16', 'Rejeição de dados inválidos no servidor com mensagem de erro clara');
 
 // CA17: Persistência Relacional e Integridade
-$checkIntegridade = $pdo->query("SELECT COUNT(*) AS t FROM usuarios WHERE email = 'admin@jif.ifro.edu.br'")->fetch()['t'];
+$stmtIntegridade = $pdo->prepare("SELECT COUNT(*) AS t FROM usuarios WHERE id = :id AND perfil = 'admin'");
+$stmtIntegridade->execute([':id' => $testAdminId]);
+$checkIntegridade = $stmtIntegridade->fetch()['t'];
 assertTest($checkIntegridade == 1, 'CA17', 'Integridade referencial e persistência relacional garantidas');
 
 echo "----------------------------------------------------------------------\n";
 echo "RESULTADO FINAL: {$passou} de {$total} CRITÉRIOS DE ACEITE VALIDADOS COM SUCESSO!\n";
 echo "======================================================================\n";
+
+if ($pdo->inTransaction()) {
+    $pdo->rollBack(); // remove todos os registros temporários criados pela suíte
+}
 
 if ($passou === $total) {
     echo "STATUS: 100% DE CONFORMIDADE COM A ESPECIFICAÇÃO OFICIAL DO JIF+!\n";

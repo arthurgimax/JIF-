@@ -8,8 +8,18 @@ echo "============================================================\n";
 echo "  TESTE DE AUTENTICAÇÃO E CONTROLE DE ACESSO (RBAC) — JIF+\n";
 echo "============================================================\n";
 
-// 1. Teste de login com credenciais válidas de Administrador
-$loginAdmin = autenticarUsuario('admin@jif.ifro.edu.br', 'admin123');
+$pdo = Database::getConnection();
+$pdo->beginTransaction();
+$adminEmailTeste = 'admin.auth.' . bin2hex(random_bytes(6)) . '@example.test';
+$adminSenhaTeste = bin2hex(random_bytes(16));
+$stmtAdminTeste = $pdo->prepare("INSERT INTO usuarios (nome, email, senha_hash, perfil, ativo) VALUES ('Admin Teste', :email, :hash, 'admin', 1)");
+$stmtAdminTeste->execute([
+    ':email' => $adminEmailTeste,
+    ':hash' => password_hash($adminSenhaTeste, PASSWORD_BCRYPT),
+]);
+
+// 1. Teste de login com credenciais válidas de Administrador temporário
+$loginAdmin = autenticarUsuario($adminEmailTeste, $adminSenhaTeste);
 if ($loginAdmin['sucesso']) {
     echo "  [OK] Autenticação válida do Administrador com hash bcrypt.\n";
 } else {
@@ -18,7 +28,7 @@ if ($loginAdmin['sucesso']) {
 }
 
 // 2. Teste de login com senha incorreta
-$loginInvalido = autenticarUsuario('admin@jif.ifro.edu.br', 'senha_errada_xyz');
+$loginInvalido = autenticarUsuario($adminEmailTeste, 'senha_errada_xyz');
 if (!$loginInvalido['sucesso']) {
     echo "  [OK] Bloqueio correto de login com senha incorreta.\n";
 } else {
@@ -28,9 +38,12 @@ if (!$loginInvalido['sucesso']) {
 
 // 3. Teste de cadastro de novo usuário estudante
 $emailTeste = 'teste.estudante.' . time() . '@calama.ifro.edu.br';
-$cadastro = cadastrarUsuario('Estudante Atleta Teste', $emailTeste, 'senhaForte123', 'atleta');
-if ($cadastro['sucesso']) {
-    echo "  [OK] Cadastro de novo usuário concluído com hash e validação de e-mail.\n";
+$cadastro = cadastrarUsuario('Estudante Atleta Teste', $emailTeste, 'senhaForte123', 'admin');
+$stmtPerfilTeste = $pdo->prepare('SELECT perfil FROM usuarios WHERE email = :email');
+$stmtPerfilTeste->execute([':email' => $emailTeste]);
+$perfilTeste = $stmtPerfilTeste->fetchColumn();
+if ($cadastro['sucesso'] && $perfilTeste === 'atleta') {
+    echo "  [OK] Cadastro com hash, validação de e-mail e bloqueio de elevação de privilégio.\n";
 } else {
     echo "  [FALHA] Falha no cadastro: {$cadastro['mensagem']}\n";
     exit(1);
@@ -55,6 +68,7 @@ if ($loginNovo['sucesso']) {
 }
 
 encerrarSessao();
+if ($pdo->inTransaction()) { $pdo->rollBack(); }
 echo "------------------------------------------------------------\n";
 echo "STATUS: TODOS OS TESTES DE AUTENTICAÇÃO E SEGURANÇA PASSARAM!\n";
 echo "============================================================\n";

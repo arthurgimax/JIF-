@@ -78,13 +78,6 @@ require_once __DIR__ . '/includes/header.php';
             Não possui uma conta? <a href="cadastro.php" style="font-weight:700;color:var(--primary);">Cadastre-se gratuitamente</a>
         </div>
 
-        <div style="margin-top:20px;background:#f8fafc;padding:15px;border-radius:var(--radius-sm);border:1px solid #e2e8f0;font-size:0.8rem;color:#64748b;">
-            <strong>Contas de Demonstração (Seed Oficial):</strong><br>
-            • <em>Admin:</em> admin@jif.ifro.edu.br / <code>admin123</code><br>
-            • <em>Coordenador:</em> coordenador@jif.ifro.edu.br / <code>organizador123</code><br>
-            • <em>Treinador:</em> treinador.calama@ifro.edu.br / <code>treinador123</code><br>
-            • <em>Atleta:</em> arthur.gimax@calama.ifro.edu.br / <code>atleta123</code>
-        </div>
     </div>
 </div>
 

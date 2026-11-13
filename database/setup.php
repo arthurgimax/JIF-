@@ -1,13 +1,12 @@
 <?php
 /**
- * JIF+ — Script de Instalação e Inicialização do Banco de Dados
- * Executável via linha de comando (CLI) ou navegador web.
+ * JIF+ — Script local de instalação do banco de dados.
+ * Por segurança, pode ser executado somente pela linha de comando (CLI).
  */
 
-// Garante exibição adequada de caracteres UTF-8
-if (php_sapi_name() !== 'cli') {
-    header('Content-Type: text/html; charset=utf-8');
-    echo '<pre style="background:#1a1a1a;color:#00ff66;padding:20px;font-family:monospace;font-size:14px;border-radius:8px;">';
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
 }
 
 function output($mensagem) {
@@ -46,6 +45,10 @@ function str_starts_to_comment($str) {
 $dbHost = $env['DB_HOST'] ?? '127.0.0.1';
 $dbPort = $env['DB_PORT'] ?? 3306;
 $dbName = $env['DB_NAME'] ?? 'jif_plus';
+if (!preg_match('/^[A-Za-z0-9_]+$/', $dbName)) {
+    output('ERRO: nome de banco inválido. Use somente letras, números e underscore.');
+    exit(1);
+}
 $dbUser = $env['DB_USER'] ?? 'root';
 $dbPass = $env['DB_PASS'] ?? '';
 
@@ -82,14 +85,19 @@ try {
     output(" -> Estrutura relacional de 10 tabelas criada com sucesso!");
 
     // Execução do Seed
-    output("[4/4] Inserindo dados realistas de demonstração (seed.sql)...");
-    $seedFile = __DIR__ . '/seed.sql';
-    if (!file_exists($seedFile)) {
-        throw new Exception("Arquivo seed.sql não encontrado em {$seedFile}");
+    $totalUsuarios = (int)$pdo->query('SELECT COUNT(*) FROM usuarios')->fetchColumn();
+    if ($totalUsuarios === 0) {
+        output("[4/4] Inserindo dados de demonstração local (seed.sql)...");
+        $seedFile = __DIR__ . '/seed.sql';
+        if (!file_exists($seedFile)) {
+            throw new Exception("Arquivo seed.sql não encontrado em {$seedFile}");
+        }
+        $seedSql = file_get_contents($seedFile);
+        $pdo->exec($seedSql);
+        output(" -> Carga de demonstração inserida.");
+    } else {
+        output("[4/4] Banco já contém usuários; seed ignorado para evitar duplicação.");
     }
-    $seedSql = file_get_contents($seedFile);
-    $pdo->exec($seedSql);
-    output(" -> Carga de dados inicial inserida com sucesso!");
 
     output("----------------------------------------------------------------------");
     output("VERIFICAÇÃO DE REGISTROS CRIADOS:");
@@ -107,7 +115,7 @@ try {
     }
 
     output("======================================================================");
-    output("   SISTEMA DE BANCO DE DADOS DO JIF+ INSTALADO E 100% OPERACIONAL!    ");
+    output("   ESTRUTURA DO BANCO JIF+ PREPARADA. EXECUTE OS TESTES DO SISTEMA.    ");
     output("======================================================================");
 
 } catch (PDOException $e) {
@@ -116,8 +124,4 @@ try {
 } catch (Exception $e) {
     output("ERRO GERAL: " . $e->getMessage());
     exit(1);
-}
-
-if (php_sapi_name() !== 'cli') {
-    echo '</pre>';
 }

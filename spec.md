@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0 Final)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.2 — Revisão para publicação)
 
 ---
 
@@ -12,8 +12,8 @@
 - **Docente Responsável**: Prof. Rafael Pitwak
 - **Estudante Autor**: Arthur Henrique Gimax Oliveira
 - **Repositório Oficial**: [github.com/arthurgimax/JIF-](https://github.com/arthurgimax/JIF-)
-- **Versão do Documento**: 1.0 Final (Consolidada e Homologada)
-- **Data de Homologação**: Novembro de 2026
+- **Versão do Documento**: 1.0.2 (revisão técnica para publicação)
+- **Data da Revisão**: 13 de novembro de 2026
 
 ---
 
@@ -70,7 +70,7 @@ Desenvolver e implantar a plataforma web **JIF+**, centralizando a gestão de in
 
 ## 5. Público-Alvo e Perfis de Usuários (RBAC)
 
-O sistema implementa o modelo de Controle de Acesso Baseado em Papéis (*Role-Based Access Control* — RBAC), discriminando cinco níveis operacionais estritos definidos no arquivo [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php):
+O sistema implementa o modelo de Controle de Acesso Baseado em Papéis (*Role-Based Access Control* — RBAC), discriminando cinco níveis operacionais estritos definidos no arquivo [`config/auth.php`](config/auth.php):
 
 | Perfil | Identificador Técnico | Escopo de Permissões e Ações Permitidas |
 | :--- | :--- | :--- |
@@ -84,7 +84,7 @@ O sistema implementa o modelo de Controle de Acesso Baseado em Papéis (*Role-Ba
 
 ## 6. Casos de Uso
 
-A dinâmica operacional do JIF+ é norteada por 12 casos de uso principais, cujos fluxos foram validados funcionalmente na aplicação:
+A dinâmica operacional do JIF+ é norteada por 12 casos de uso principais, cujos fluxos estão implementados no código e precisam ser reexecutados na homologação final:
 
 - **UC01 — Cadastrar-se e autenticar-se no sistema**:
   - *Ator*: Visitante / Usuário.
@@ -131,23 +131,23 @@ A tabela a seguir consolida os 17 Requisitos Funcionais (RF01 a RF17), indicando
 
 | Código | Descrição do Requisito Funcional | Status Real | Arquivos de Implementação no Sistema |
 | :--- | :--- | :---: | :--- |
-| **RF01** | Autocadastro de usuários com validação de formato de e-mail, verificação de duplicidade e obrigatoriedade de senha com mínimo de 6 caracteres. | **Implementado** | [`cadastro.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/cadastro.php), [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php) |
-| **RF02** | Autenticação de credenciais via e-mail e senha, controle de sessão ativa, proteção contra Session Fixation e encerramento seguro (logout). | **Implementado** | [`login.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/login.php), [`logout.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/logout.php), [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php) |
-| **RF03** | Controle estrito de acesso e permissões (RBAC) bloqueando o acesso de usuários não autorizados a rotas administrativas (`HTTP 403`). | **Implementado** | [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php), [`admin/usuarios.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/usuarios.php) |
-| **RF04** | Gestão de instituições e campi participantes (cadastro, listagem e vinculação geográfica por UF). | **Implementado** | [`admin/instituicoes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/instituicoes.php) |
-| **RF05** | Gestão de competições (cadastro de edição, ano, períodos de início/término, local-sede e controle de status: planejada, em andamento, encerrada). | **Implementado** | [`admin/competicoes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/competicoes.php), [`competicoes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/competicoes.php) |
-| **RF06** | Gestão de modalidades esportivas com vínculo direto à competição, definindo categoria (masculino/feminino/misto) e formato (coletiva/individual). | **Implementado** | [`admin/modalidades.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/modalidades.php), [`modalidades.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/modalidades.php) |
-| **RF07** | Gestão de equipes esportivas associadas a campus, competição, modalidade e técnico responsável, prevenindo duplicidades. | **Implementado** | [`admin/equipes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/equipes.php), [`equipes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/equipes.php) |
-| **RF08** | Cadastro e inscrição de atletas em equipes, registrando matrícula institucional, dorsal (número da camisa) e posição em campo. | **Implementado** | [`admin/atletas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/atletas.php) |
-| **RF09** | Perfil esportivo individual do atleta (Boletim Informativo do Atleta — BID) com histórico de partidas, equipes integradas e gols/pontos acumulados. | **Implementado** | [`atletas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/atletas.php) |
-| **RF10** | Agendamento e programação de partidas oficiais definindo fase, data, horário, local/quadra e duas equipes distintas da mesma modalidade. | **Implementado** | [`admin/partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/partidas.php), [`partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/partidas.php) |
-| **RF11** | Registro de placares parciais e homologação de resultado final com transição de situação da partida para "encerrada". | **Implementado** | [`admin/sumula.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/sumula.php), [`partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/partidas.php) |
-| **RF12** | Súmula eletrônica com registro de eventos individuais de atletas (gols, advertências por cartão amarelo, expulsões e faltas coletivas). | **Implementado** | [`admin/sumula.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/sumula.php) |
-| **RF13** | Visualização pública da página da equipe contendo listagem do elenco completo, comissão técnica, próximos jogos e retrospecto de resultados. | **Implementado** | [`equipes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/equipes.php) |
-| **RF14** | Mecanismo de busca textual e filtros dinâmicos combinados por campus, modalidade, atleta, equipe e status de confronto. | **Implementado** | [`index.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/index.php), [`atletas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/atletas.php), [`partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/partidas.php), [`assets/js/app.js`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/assets/js/app.js) |
-| **RF15** | Painéis analíticos e relatórios de inteligência com cálculo de classificação por pontos, Chuteira de Ouro e Troféu Fair Play. | **Implementado** | [`classificacao.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/classificacao.php), [`inteligencia.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/inteligencia.php), [`index.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/index.php) |
-| **RF16** | Validação mandatória no backend para todas as regras de negócio e integridade de tipos antes da persistência de formulários. | **Implementado** | Todos os scripts em `admin/*.php`, [`cadastro.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/cadastro.php) e `config/` |
-| **RF17** | Persistência relacional integral em banco de dados relacional com restrições de chaves estrangeiras e transações estruturadas. | **Implementado** | [`database/schema.sql`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/database/schema.sql), [`config/database.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/database.php) |
+| **RF01** | Autocadastro de usuários com validação de formato de e-mail, verificação de duplicidade e obrigatoriedade de senha com mínimo de 6 caracteres. | **Implementado** | [`cadastro.php`](./cadastro.php), [`config/auth.php`](config/auth.php) |
+| **RF02** | Autenticação de credenciais via e-mail e senha, controle de sessão ativa, proteção contra Session Fixation e encerramento seguro (logout). | **Implementado** | [`login.php`](./login.php), [`logout.php`](./logout.php), [`config/auth.php`](config/auth.php) |
+| **RF03** | Controle estrito de acesso e permissões (RBAC) bloqueando o acesso de usuários não autorizados a rotas administrativas (`HTTP 403`). | **Implementado** | [`config/auth.php`](config/auth.php), [`admin/usuarios.php`](./admin/usuarios.php) |
+| **RF04** | Gestão de instituições e campi participantes (cadastro, listagem e vinculação geográfica por UF). | **Implementado** | [`admin/instituicoes.php`](./admin/instituicoes.php) |
+| **RF05** | Gestão de competições (cadastro de edição, ano, períodos de início/término, local-sede e controle de status: planejada, em andamento, encerrada). | **Implementado** | [`admin/competicoes.php`](./admin/competicoes.php), [`competicoes.php`](./competicoes.php) |
+| **RF06** | Gestão de modalidades esportivas com vínculo direto à competição, definindo categoria (masculino/feminino/misto) e formato (coletiva/individual). | **Implementado** | [`admin/modalidades.php`](./admin/modalidades.php), [`modalidades.php`](./modalidades.php) |
+| **RF07** | Gestão de equipes esportivas associadas a campus, competição, modalidade e técnico responsável, prevenindo duplicidades. | **Implementado** | [`admin/equipes.php`](./admin/equipes.php), [`equipes.php`](./equipes.php) |
+| **RF08** | Cadastro e inscrição de atletas em equipes, registrando matrícula institucional, dorsal (número da camisa) e posição em campo. | **Implementado** | [`admin/atletas.php`](./admin/atletas.php) |
+| **RF09** | Perfil esportivo individual do atleta (Boletim Informativo do Atleta — BID) com histórico de partidas, equipes integradas e gols/pontos acumulados. | **Implementado** | [`atletas.php`](./atletas.php) |
+| **RF10** | Agendamento e programação de partidas oficiais definindo fase, data, horário, local/quadra e duas equipes distintas da mesma modalidade. | **Implementado** | [`admin/partidas.php`](./admin/partidas.php), [`partidas.php`](./partidas.php) |
+| **RF11** | Registro de placares parciais e homologação de resultado final com transição de situação da partida para "encerrada". | **Implementado** | [`admin/sumula.php`](./admin/sumula.php), [`partidas.php`](./partidas.php) |
+| **RF12** | Súmula eletrônica com registro de eventos individuais de atletas (gols, advertências por cartão amarelo, expulsões e faltas coletivas). | **Implementado** | [`admin/sumula.php`](./admin/sumula.php) |
+| **RF13** | Visualização pública da página da equipe contendo listagem do elenco completo, comissão técnica, próximos jogos e retrospecto de resultados. | **Implementado** | [`equipes.php`](./equipes.php) |
+| **RF14** | Mecanismo de busca textual e filtros dinâmicos combinados por campus, modalidade, atleta, equipe e status de confronto. | **Implementado** | [`index.php`](./index.php), [`atletas.php`](./atletas.php), [`partidas.php`](./partidas.php), [`assets/js/app.js`](./assets/js/app.js) |
+| **RF15** | Painéis analíticos e relatórios de inteligência com cálculo de classificação por pontos, Chuteira de Ouro e Troféu Fair Play. | **Implementado** | [`classificacao.php`](./classificacao.php), [`inteligencia.php`](./inteligencia.php), [`index.php`](./index.php) |
+| **RF16** | Validação no backend dos campos e regras de negócio principais antes da persistência; revisão exaustiva de todos os campos ainda pendente. | **Parcial** | Todos os scripts em `admin/*.php`, [`cadastro.php`](./cadastro.php) e `config/` |
+| **RF17** | Persistência relacional integral em banco de dados relacional com restrições de chaves estrangeiras e transações estruturadas. | **Implementado** | [`database/schema.sql`](./database/schema.sql), [`config/database.php`](config/database.php) |
 
 ---
 
@@ -156,14 +156,14 @@ A tabela a seguir consolida os 17 Requisitos Funcionais (RF01 a RF17), indicando
 Os Requisitos Não Funcionais (RNF01 a RNF11) atendem às diretrizes de engenharia de software e ao Checklist de Segurança do Anexo B da apostila:
 
 - **RNF01 — Criptografia e Armazenamento Seguro de Senhas**: As credenciais dos usuários nunca são gravadas em texto puro. O sistema emprega a função nativa `password_hash()` com algoritmo `bcrypt` e fator de custo de processamento ajustado (`cost => 10`). A autenticação utiliza `password_verify()`.
-- **RNF02 — Validação Obrigatória no Servidor**: Todas as entradas de dados via formulário (POST e GET) passam por filtragem, sanitização (`strip_tags`, `htmlspecialchars`) e validação de formato e comprimento no backend PHP, operando independentemente de validações do cliente.
-- **RNF03 — Proteção contra Injeção de SQL (SQL Injection)**: Todas as operações de leitura e escrita com o banco de dados utilizam exclusivamente a interface **PDO com prepared statements** parametrizados. A diretiva `PDO::ATTR_EMULATE_PREPARES` está explicitamente desativada (`false`), garantindo que o servidor do banco execute a compilação do plano de consulta em separado dos valores.
-- **RNF04 — Isolamento de Segredos e Variáveis de Ambiente**: Credenciais de banco de dados (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`) residem exclusivamente no arquivo `.env`. Esse arquivo está registrado no `.gitignore` para impedir sua submissão ao versionamento Git no GitHub. Um arquivo modelo [`/.env.example`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/.env.example) é fornecido para configuração do ambiente.
+- **RNF02 — Validação Obrigatória no Servidor**: O cadastro público e os principais fluxos administrativos possuem validações no backend. A revisão identificou que ainda falta conferir de forma exaustiva limites, enumerações e consistência relacional em todos os formulários; por isso, o item é tratado como parcial no checklist de segurança.
+- **RNF03 — Proteção contra Injeção de SQL (SQL Injection)**: As consultas que recebem valores de formulários, filtros ou identificadores variáveis usam **PDO com prepared statements** e parâmetros vinculados. Consultas estáticas sem entrada externa usam SQL fixo. A diretiva `PDO::ATTR_EMULATE_PREPARES` está explicitamente desativada (`false`).
+- **RNF04 — Isolamento de Segredos e Variáveis de Ambiente**: Credenciais de banco de dados (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`) residem exclusivamente no arquivo `.env`. Esse arquivo está registrado no `.gitignore` para impedir sua submissão ao versionamento Git no GitHub. Um arquivo modelo [`/.env.example`](./.env.example) é fornecido para configuração do ambiente.
 - **RNF05 — Controle de Acesso às Rotas e Segurança de Sessão**: Cada requisição a áreas restritas (`/admin/*`) executa a função `exigirAutenticacao()`, que verifica a existência de sessão ativa e confronta o perfil do usuário logado com os privilégios requeridos. Sessões utilizam cookies com flags `HttpOnly` (prevenção contra roubo via script XSS) e `SameSite=Lax`.
-- **RNF06 — Privacidade de Dados de Estudantes-Atletas**: O sistema não armazena nem expõe publicamente dados pessoais sensíveis (como endereços residenciais, telefones pessoais ou documentos civis como CPF). O perfil público exibe unicamente nome social/desportivo, matrícula institucional, foto esportiva, dorsal e histórico de partidas.
+- **RNF06 — Privacidade de Dados de Estudantes-Atletas**: O perfil público exibe nome esportivo, campus, número de camisa, estatísticas e histórico esportivo. Matrícula institucional, data de nascimento e e-mail de responsáveis não são exibidos em páginas públicas; esses dados permanecem restritos às telas administrativas.
 - **RNF07 — Tratamento Seguro de Erros e Exceções**: Mensagens técnicas nativas do banco de dados, nomes internos de colunas e stack traces do PHP não são exibidos aos usuários em tela. Erros são capturados em blocos `try/catch`, gravados no log interno do servidor via `error_log()` e substituídos por avisos visuais amigáveis.
-- **RNF08 — Protocolo de Comunicação**: O sistema é compatível com conexões seguras sob HTTPS/TLS em ambiente de produção, possuindo configuração condicional para cookie seguro (`secure => true` quando detectado tráfego HTTPS).
-- **RNF09 — Desempenho e Tempo de Resposta**: Consultas públicas e painéis analíticos são otimizados com índices específicos nas colunas mais consultadas (`idx_partidas_data_hora`, `idx_atletas_matricula`, `idx_usuarios_email`), mantendo o tempo de renderização abaixo de 2 segundos sob condições de carga padrão.
+- **RNF08 — Protocolo de Comunicação**: o código suporta cookies seguros quando HTTPS é detectado; HTTPS efetivo permanece pendente de configuração e teste no provedor de produção.
+- **RNF09 — Desempenho e Tempo de Resposta**: o esquema contém índices em colunas consultadas com frequência; a meta de resposta abaixo de 2 segundos ainda não foi medida por teste de carga.
 - **RNF10 — Responsividade e Acessibilidade**: A interface visual foi desenvolvida em CSS3 responsivo utilizando layouts adaptáveis com Flexbox e CSS Grid. O sistema oferece usabilidade homogênea em navegadores desktop, tablets e smartphones com larguras a partir de 360px.
 - **RNF11 — Integridade Relacional e Suporte a Transações**: O esquema físico do banco adota o mecanismo de armazenamento **InnoDB** no MySQL, impondo chaves estrangeiras (`FOREIGN KEY`) com regras de integridade (`ON DELETE RESTRICT` e `ON DELETE CASCADE`) para garantir a consistência das entidades esportivas.
 
@@ -187,7 +187,7 @@ As operações do JIF+ seguem as seguintes regras de negócio mandatórias:
   4. Menor número de Gols Sofridos (GC).
 - **RN06 — Homologação de Partidas**: Placares só produzem efeitos estatísticos na classificação geral e nos perfis individuais após a situação da partida ser alterada para `encerrada`. Partidas com status `agendada` ou `cancelada` não computam pontos.
 - **RN07 — Proteção contra Exclusão de Histórico (Integridade Referencial)**: Equipes e instituições que possuam vínculos ativos em partidas ou súmulas não podem ser excluídas fisicamente do banco de dados (`ON DELETE RESTRICT`), prevenindo inconsistências em registros históricos.
-- **RN08 — Concessão Restrita de Privilégios**: Novos usuários cadastrados publicamente pelo formulário web recebem por padrão o perfil `atleta` (ou solicitam `treinador`). A concessão de privilégios de `admin` ou `organizador` é de competência privativa de um Administrador Geral através da tela de gerenciamento de usuários.
+- **RN08 — Concessão Restrita de Privilégios**: Novos usuários cadastrados publicamente pelo formulário web recebem exclusivamente o perfil `atleta`. A concessão dos perfis `treinador`, `organizador` e `admin` é feita por um Administrador Geral através da tela de gerenciamento de usuários.
 
 ---
 
@@ -232,13 +232,13 @@ A arquitetura do sistema adota uma abordagem estruturada em camadas, priorizando
 2. **Camada de Abstração PDO**: Garante portabilidade e blindagem técnica mandatória contra SQL Injection com suporte nativo a consultas preparadas.
 3. **Mecanismo Duplo de Banco de Dados**:
    - **MySQL 8.0 / MariaDB**: Motor de banco principal configurado com mecanismo **InnoDB**, suportando transações atômicas, chaves estrangeiras e integridade referencial.
-   - **SQLite Local de Contingência**: Configurado em [`config/database.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/database.php) para garantir alta disponibilidade no ambiente de desenvolvimento local, ativando automaticamente o arquivo `database/jif_plus.sqlite` caso as credenciais locais do MySQL sofram interrupções momentâneas.
+   - **SQLite Local de Contingência**: Configurado em [`config/database.php`](config/database.php) para garantir alta disponibilidade no ambiente de desenvolvimento local, ativando automaticamente o arquivo `database/jif_plus.sqlite` caso as credenciais locais do MySQL sofram interrupções momentâneas.
 
 ---
 
 ## 11. Modelo de Dados e Diagrama Entidade-Relacionamento (DER)
 
-O banco de dados relacional é composto por 10 tabelas normalizadas, definidas em [`database/schema.sql`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/database/schema.sql):
+O banco de dados relacional é composto por 10 tabelas normalizadas, definidas em [`database/schema.sql`](./database/schema.sql):
 
 ### 11.1. Dicionário de Dados
 
@@ -350,14 +350,14 @@ erDiagram
 
 ## 12. Segurança da Aplicação (Conformidade com o Anexo B)
 
-A aplicação foi auditada conforme o Checklist de Segurança do Anexo B da apostila metodológica:
+Foi realizada uma revisão estática inicial conforme o Checklist de Segurança do Anexo B. Os resultados e pendências estão discriminados em `tests/test_checklist.md`; não se declara conformidade total antes da execução no ambiente publicado:
 
 1. **Armazenamento de Senhas (RNF01)**:
    - Funções utilizadas: `password_hash($senha, PASSWORD_BCRYPT, ['cost' => 10])` e `password_verify($senha, $hash)`.
    - Nenhuma senha em texto puro é registrada em logs ou armazenada no banco.
 2. **Proteção contra SQL Injection (RNF03)**:
    - Conexão configurada em `config/database.php` com `PDO::ATTR_EMULATE_PREPARES => false`.
-   - Todas as 28 consultas SQL no código utilizam prepared statements com vinculação de parâmetros (`:param` ou array associativo em `execute()`).
+   - Consultas que recebem dados externos usam prepared statements com vinculação de parâmetros; consultas sem parâmetros são SQL estático.
 3. **Controle de Acesso e RBAC (RNF05)**:
    - Verificação em nível de servidor antes do processamento de qualquer rota administrativa através da função `exigirAutenticacao(['admin', 'organizador'])`.
    - Resposta HTTP 403 com layout visual amigável e bloqueio de execução caso o usuário não possua privilégios suficientes.
@@ -365,7 +365,7 @@ A aplicação foi auditada conforme o Checklist de Segurança do Anexo B da apos
    - Inicialização padronizada com `session_set_cookie_params()` impondo diretivas `httponly => true` (impossibilita leitura de sessão via JavaScript) e `samesite => 'Lax'`.
    - Regeneração de ID de sessão (`session_regenerate_id(true)`) no momento do login para mitigar ataques de fixação de sessão.
 5. **Proteção contra Cross-Site Scripting (XSS)**:
-   - Todas as saídas de variáveis em templates HTML passam pela função `htmlspecialchars($var, ENT_QUOTES, 'UTF-8')`.
+   - As saídas dinâmicas das páginas públicas e administrativas são tratadas com `htmlspecialchars()` nos pontos revisados; a verificação de todos os templates deve continuar no checklist de testes.
    - Entradas de formulário são sanitizadas previamente via `strip_tags()` e filtros nativos do PHP (`FILTER_SANITIZE_EMAIL`).
 6. **Proteção contra Exposição de Dados Sensíveis (RNF04 e RNF07)**:
    - Arquivo `.env` isolado no `.gitignore`.
@@ -412,29 +412,29 @@ Portal JIF+
 
 ## 14. Critérios de Aceitação e Testes
 
-A conformidade do sistema foi validada por uma bateria automatizada de testes implementada em [`tests/test_full_suite.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/tests/test_full_suite.php), correspondendo aos 17 Critérios de Aceitação (CA01 a CA17):
+A conformidade do sistema foi validada por uma bateria automatizada de testes implementada em [`tests/test_full_suite.php`](tests/test_full_suite.php), correspondendo aos 17 Critérios de Aceitação (CA01 a CA17):
 
-| Critério | Requisito | Cenário de Teste Validado | Resultado no Teste Automatizado |
+| Critério | Requisito | Cenário de Teste Previsto | Status de Execução |
 | :---: | :---: | :--- | :---: |
-| **CA01** | RF01 | Cadastro de novo usuário persistido com hash bcrypt e validação de e-mail único. | **Aprovado (100%)** |
-| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Aprovado (100%)** |
-| **CA03** | RF03 | Bloqueio de acesso a páginas administrativas por usuários sem privilégio (RBAC) e liberação para Administrador. | **Aprovado (100%)** |
-| **CA04** | RF04 | Cadastro e persistência de campus/instituição participante no banco de dados. | **Aprovado (100%)** |
-| **CA05** | RF05 | Cadastro de competição com datas de início/fim e gravação do status inicial "planejada". | **Aprovado (100%)** |
-| **CA06** | RF06 | Associação de modalidade esportiva vinculada a uma competição com categoria e formato válidos. | **Aprovado (100%)** |
-| **CA07** | RF07 | Inscrição de equipes com chaves estrangeiras válidas de instituição, competição e modalidade. | **Aprovado (100%)** |
-| **CA08** | RF08 | Inscrição de estudante-atleta com matrícula institucional, dorsal (número de camisa) e posição tática. | **Aprovado (100%)** |
-| **CA09** | RF09 | Consulta e renderização completa de perfil individual (BID) com histórico de partidas e gols. | **Aprovado (100%)** |
-| **CA10** | RF10 | Agendamento de confronto entre equipes distintas pertencentes à mesma competição e modalidade. | **Aprovado (100%)** |
-| **CA11** | RF11 | Lançamento de placares parciais/finais e transição de status da partida para "encerrada". | **Aprovado (100%)** |
-| **CA12** | RF12 | Registro de eventos individuais na súmula (gols e faltas) com reflexo imediato no perfil do atleta. | **Aprovado (100%)** |
-| **CA13** | RF13 | Visualização pública da equipe com elenco escalado, comissão técnica e histórico de resultados. | **Aprovado (100%)** |
-| **CA14** | RF14 | Mecanismo de busca textual parametrizada por nome de atleta e filtros esportivos combinados. | **Aprovado (100%)** |
-| **CA15** | RF15 | Cálculo automático da tabela de classificação (pontos 3/1/0, saldo de gols e gols pró). | **Aprovado (100%)** |
-| **CA16** | RF16 | Rejeição no servidor de entradas inválidas ou malformadas, com mensagens de erro claras. | **Aprovado (100%)** |
-| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Aprovado (100%)** |
+| **CA01** | RF01 | Cadastro de novo usuário persistido com hash bcrypt e validação de e-mail único. | **Implementado; reexecução pendente** |
+| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Implementado; reexecução pendente** |
+| **CA03** | RF03 | Bloqueio de acesso a páginas administrativas por usuários sem privilégio (RBAC) e liberação para Administrador. | **Implementado; reexecução pendente** |
+| **CA04** | RF04 | Cadastro e persistência de campus/instituição participante no banco de dados. | **Implementado; reexecução pendente** |
+| **CA05** | RF05 | Cadastro de competição com datas de início/fim e gravação do status inicial "planejada". | **Implementado; reexecução pendente** |
+| **CA06** | RF06 | Associação de modalidade esportiva vinculada a uma competição com categoria e formato válidos. | **Implementado; reexecução pendente** |
+| **CA07** | RF07 | Inscrição de equipes com chaves estrangeiras válidas de instituição, competição e modalidade. | **Implementado; reexecução pendente** |
+| **CA08** | RF08 | Inscrição de estudante-atleta com matrícula institucional, dorsal (número de camisa) e posição tática. | **Implementado; reexecução pendente** |
+| **CA09** | RF09 | Consulta e renderização completa de perfil individual (BID) com histórico de partidas e gols. | **Implementado; reexecução pendente** |
+| **CA10** | RF10 | Agendamento de confronto entre equipes distintas pertencentes à mesma competição e modalidade. | **Implementado; reexecução pendente** |
+| **CA11** | RF11 | Lançamento de placares parciais/finais e transição de status da partida para "encerrada". | **Implementado; reexecução pendente** |
+| **CA12** | RF12 | Registro de eventos individuais na súmula (gols e faltas) com reflexo imediato no perfil do atleta. | **Implementado; reexecução pendente** |
+| **CA13** | RF13 | Visualização pública da equipe com elenco escalado, comissão técnica e histórico de resultados. | **Implementado; reexecução pendente** |
+| **CA14** | RF14 | Mecanismo de busca textual parametrizada por nome de atleta e filtros esportivos combinados. | **Implementado; reexecução pendente** |
+| **CA15** | RF15 | Cálculo automático da tabela de classificação (pontos 3/1/0, saldo de gols e gols pró). | **Implementado; reexecução pendente** |
+| **CA16** | RF16 | Rejeição no servidor de entradas inválidas ou malformadas, com mensagens de erro claras. | **Parcial; reexecução pendente** |
+| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Implementado; reexecução pendente** |
 
-**Resultado Geral dos Testes**: 17 de 17 critérios de aceitação validados com sucesso no script de teste oficial (Taxa de Sucesso: 100%).
+**Resultado Geral dos Testes nesta revisão**: a suíte automatizada existe, mas não foi possível executá-la neste ambiente porque os drivers PDO para SQLite/MySQL não estão instalados. Portanto, nenhum percentual de aprovação é declarado nesta revisão. Execute `php tests/test_full_suite.php` em ambiente com a extensão PDO correspondente e registre a saída real antes da entrega.
 
 ---
 
@@ -451,28 +451,28 @@ O sistema está plenamente funcional e configurado para execução local no serv
 3. **Inicialização dos Serviços**:
    - Abrir o **XAMPP Control Panel** e iniciar os módulos **Apache** e **MySQL**.
 4. **Instalação do Banco de Dados**:
-   - Acessar pelo navegador: `http://localhost/4°Bim - Arthur Gimax - JIF+/database/setup.php`
-   - O script cria o banco `jif_plus`, aplica o esquema físico das 10 tabelas e popula a base com os dados iniciais do JIFRO.
+   - Executar no terminal: `C:\xampp\php\php.exe database/setup.php` (o instalador é bloqueado via navegador).
+   - O script cria o banco `jif_plus`, aplica o schema não destrutivo das 10 tabelas e insere dados de demonstração somente se o banco ainda estiver vazio.
 5. **Acesso à Aplicação**:
    - URL Principal: `http://localhost/4°Bim - Arthur Gimax - JIF+/`
    - URL Administrativa: `http://localhost/4°Bim - Arthur Gimax - JIF+/admin/`
 
 ### 15.2. Diretrizes de Publicação Externa (Fase 6 da Metodologia)
 Conforme preconizado na apostila metodológica do professor:
-- **Status Atual da Implantação**: O projeto encontra-se homologado e em execução no ambiente local de desenvolvimento com o servidor Apache e banco relacional.
+- **Status Atual da Implantação**: o projeto foi desenvolvido para execução local no XAMPP; nesta revisão, a execução completa não foi revalidada porque o ambiente de auditoria não possui os drivers PDO de banco.
 - **Critério de Conclusão da Implantação Remota**: A publicação em ambiente de produção remoto só deve ser considerada formalmente concluída quando houver uma **URL pública funcional e ativa na internet**.
 - **Provedores de Hospedagem Compatíveis com a Stack LAMP**:
   - Para a publicação definitiva do JIF+, recomenda-se o uso de provedores com suporte nativo a PHP 8.x e MySQL gerenciado, tais como:
-    1. **Alwaysdata** ou **InfinityFree**: Provedores com painel cPanel/phpMyAdmin, ideais para projetos acadêmicos em PHP e MySQL.
-    2. **Render** ou **Railway**: Publicação através de contêiner Docker contendo Apache, PHP e instância remota de banco MySQL/MariaDB.
-    3. **Servidor Institucional do IFRO**: Infraestrutura de servidores da Rede Federal.
+    1. **InfinityFree**: opção gratuita a avaliar para manter PHP + MySQL/MariaDB sem migrar o código. O plano e os limites devem ser conferidos no momento do deploy.
+    2. **Render/Railway com Docker**: alternativa técnica, mas exige banco persistente externo e configuração adicional.
+    3. **Servidor Institucional do IFRO**: alternativa caso exista infraestrutura disponível.
 - **Configuração de Variáveis na Produção**: No servidor remoto, as credenciais de banco de dados devem ser preenchidas no painel de controle da hospedagem ou em arquivo `.env` protegido, assegurando conformidade com o RNF04.
 
 ---
 
 ## 16. Limitações Conhecidas e Melhorias Futuras
 
-O sistema cumpre integralmente todos os requisitos funcionais e critérios de aceitação previstos na especificação da Versão 1.0. Para versões futuras de expansão institucional, registram-se as seguintes oportunidades de melhoria planejadas:
+Os módulos funcionais estão implementados no código recebido, mas a conformidade final dos critérios de aceite depende da reexecução da suíte e dos testes manuais no ambiente publicado. Para versões futuras de expansão institucional, registram-se as seguintes oportunidades de melhoria planejadas:
 
 1. **Transmissão Lance a Lance em Tempo Real**:
    - *Status*: Planejada para a versão 2.0.
@@ -497,10 +497,23 @@ O sistema entrega um ecossistema digital funcional, seguro e visualmente profiss
 
 ---
 
+## Status de publicação e validação (revisão de 13/11/2026)
+
+- **Stack confirmada no código**: PHP tradicional, PDO e esquema MySQL/MariaDB; há também um mecanismo de contingência SQLite para desenvolvimento local.
+- **Vercel**: não hospeda diretamente este projeto como aplicação PHP tradicional sem reestruturação para funções compatíveis.
+- **Supabase**: fornece PostgreSQL, não execução PHP. A utilização exigiria migração do esquema MySQL e revisão das consultas; não é uma troca direta.
+- **Render**: pode hospedar PHP via Docker, mas requer banco persistente externo ou serviço compatível; não foi provisionado.
+- **Destino de deploy escolhido para preservar a stack**: hospedagem PHP + MySQL/MariaDB; InfinityFree é a opção gratuita considerada. Vercel não é o destino direto para esta aplicação PHP tradicional; Supabase exigiria migração do MySQL para PostgreSQL e não executa PHP.
+- **Deploy**: pendente. Nenhuma URL pública foi confirmada.
+- **Testes automatizados**: scripts presentes; execução não confirmada nesta revisão por ausência dos drivers PDO de banco no ambiente de auditoria.
+- **Segurança**: `.env` está ignorado pelo Git e não rastreado na cópia local. As contas técnicas do seed foram desativadas e o cadastro público não pode criar perfis privilegiados. O checklist do Anexo B registra validação parcial dos formulários, limpeza do histórico remoto pendente e HTTPS pendente de publicação.
+- **Git**: a cópia local e `origin/main` estão divergentes; reconciliar o histórico antes de atualizar o repositório remoto. A referência remota ainda rastreia `jif_plus.sqlite` em commit antigo; o arquivo contém contas ativas e identificadores estudantis. A versão local revisada não o inclui. A limpeza do histórico remoto deve ser decidida antes de tornar o repositório público.
+
 ## 18. Histórico de Versões
 
 | Versão | Data | Autor | Resumo das Modificações e Evoluções Registradas |
 | :---: | :---: | :--- | :--- |
 | **0.1** | Outubro de 2026 | Arthur Henrique Gimax Oliveira | Elaboração da proposta preliminar do sistema esportivo, identificação do problema e formulação dos objetivos iniciais. |
 | **0.5** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Definição da stack tecnológica oficial (PHP 8.2+, MySQL InnoDB, PDO), detalhamento dos requisitos RF01 a RF17, modelagem das 10 tabelas relacionais e estruturação do DER em Mermaid. |
-| **1.0 Final** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Versão final consolidada e homologada. Verificação completa de todos os requisitos funcionais em código-fonte, validação dos 17 critérios de aceitação (CA01 a CA17) em bateria de testes automatizados, auditoria de segurança (Anexo B), documentação do driver duplo (MySQL/SQLite) e formalização dos requisitos de implantação. |
+| **1.0** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Registro original da implementação e dos critérios CA01 a CA17. A alegação de aprovação integral registrada na versão original não foi reexecutada nesta auditoria. |
+| **1.0.2** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Revisão de publicação: correção de cadastro de perfis, desativação de contas seed, schema não destrutivo, instalador CLI, variáveis de ambiente e checklist do Anexo B. Deploy e testes de integração permanecem pendentes.

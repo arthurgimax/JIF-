@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha'] ?? '';
     $confirmarSenha = $_POST['confirmar_senha'] ?? '';
-    $perfil = $_POST['perfil'] ?? 'atleta';
+    $perfil = 'atleta';
 
     if (empty($nome) || empty($email) || empty($senha)) {
         $erro = 'Todos os campos são de preenchimento obrigatório.';
@@ -66,14 +66,6 @@ require_once __DIR__ . '/includes/header.php';
             <div class="form-group">
                 <label class="form-label" for="email">E-mail Institucional ou Pessoal</label>
                 <input type="email" id="email" name="email" class="form-control" placeholder="ex.: arthur.gimax@calama.ifro.edu.br" value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="perfil">Perfil do Usuário</label>
-                <select id="perfil" name="perfil" class="form-control" required>
-                    <option value="atleta" selected>Estudante-Atleta / Aluno</option>
-                    <option value="treinador">Treinador / Professor de Educação Física</option>
-                </select>
             </div>
 
             <div class="form-group">

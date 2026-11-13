@@ -90,11 +90,8 @@ function cadastrarUsuario(string $nome, string $email, string $senha, string $pe
         return ['sucesso' => false, 'mensagem' => 'A senha deve conter no mínimo 6 caracteres.'];
     }
 
-    // Restringe os perfis permitidos em cadastro público (visitantes só podem criar conta como atleta/visitante)
-    $perfisPermitidos = ['atleta', 'treinador'];
-    if (!in_array($perfil, $perfisPermitidos, true)) {
-        $perfil = 'atleta';
-    }
+    // Cadastro público nunca concede privilégios: perfis elevados são atribuídos pelo administrador.
+    $perfil = 'atleta';
 
     // Verifica unicidade do e-mail via prepared statement
     $stmtVerifica = $pdo->prepare("SELECT id FROM usuarios WHERE email = :email LIMIT 1");

@@ -11,7 +11,7 @@ $pdo = Database::getConnection();
 
 // 1. Ranking de Artilheiros Geral
 $stmtArtilharia = $pdo->query("
-    SELECT a.id, a.nome, a.matricula_estudantil, inst.campus,
+    SELECT a.id, a.nome, inst.campus,
            eq.nome AS equipe_nome,
            SUM(ea.valor) AS total_gols
     FROM estatisticas_atletas ea
@@ -19,7 +19,7 @@ $stmtArtilharia = $pdo->query("
     JOIN instituicoes inst ON a.instituicao_id = inst.id
     JOIN equipes eq ON ea.equipe_id = eq.id
     WHERE ea.tipo_estatistica = 'gol'
-    GROUP BY a.id, a.nome, a.matricula_estudantil, inst.campus, eq.nome
+    GROUP BY a.id, a.nome, inst.campus, eq.nome
     ORDER BY total_gols DESC
     LIMIT 10
 ");
