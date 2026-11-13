@@ -184,17 +184,24 @@ A suíte está disponível, mas o resultado precisa ser reexecutado no ambiente 
 
 ---
 
+## 🔗 Links para avaliação
+
+- **Sistema publicado:** https://jifplus-ifro.free.nf
+- **Repositório e histórico de commits:** https://github.com/arthurgimax/JIF-
+- **Spec final:** [`spec.md`](./spec.md)
+- **Changelog:** [`CHANGELOG.md`](./CHANGELOG.md)
+
 ## 🌐 Publicação atual — InfinityFree
 
 O JIF+ foi publicado no InfinityFree para esta atividade, mantendo a stack original **PHP + PDO + MySQL**.
 
-- **Domínio:** `jifplus-ifro.free.nf`
+- **Domínio HTTPS:** [https://jifplus-ifro.free.nf](https://jifplus-ifro.free.nf)
 - **Pasta de publicação:** `/htdocs`
 - **Banco:** MySQL do InfinityFree, com as 10 tabelas previstas.
 - **Configuração:** credenciais guardadas no `.env` do servidor; o arquivo não deve ser enviado ao GitHub.
 - **Fluxos verificados manualmente:** página inicial aberta em janela anônima; login de administrador concluído; cadastro de um atleta fictício no painel e confirmação do registro na listagem pública do BID.
 
-> **Pendência de segurança:** na captura da homologação, o Chrome exibiu “Não seguro”. O domínio está acessível, mas o certificado TLS/HTTPS ainda não foi confirmado. Não considere o requisito HTTPS concluído até o navegador exibir conexão segura e o teste ser repetido em janela anônima.
+> **HTTPS/TLS:** o responsável confirmou que, em janela anônima, o navegador passou a exibir conexão segura (HTTPS). O teste visual foi informado em 13/11/2026.
 
 ### Decisão sobre Vercel e Supabase
 
@@ -216,7 +223,7 @@ O JIF+ foi publicado no InfinityFree para esta atividade, mantendo a stack origi
 - O `.gitignore` exclui `.env` e arquivos locais de banco; o `.htaccess` contém regras para negar acesso direto a arquivos de ambiente e pastas internas. Ainda é necessário confirmar externamente que essas URLs retornam bloqueio (403/404), sem exibir conteúdo.
 - O histórico público contém credenciais antigas de demonstração e um `SESSION_SECRET` estático de exemplo em um commit anterior. O responsável informou que desativou os cinco usuários demonstrativos adicionais no painel de produção, preservando a conta principal; falta confirmar o estado após a ação. As credenciais de demonstração e o segredo de exemplo que aparecem em commits antigos continuam no histórico público e exigem limpeza do histórico ou restrição do repositório com acesso do professor.
 - A suíte automatizada de 17 critérios não foi executada nesta homologação; os testes manuais não substituem a execução completa.
-- O checklist em [`tests/test_checklist.md`](./tests/test_checklist.md) registra o que foi verificado e as pendências: TLS/HTTPS, histórico Git, teste de permissões com perfil não administrador, validação completa dos formulários, proteção CSRF e limitação de tentativas de login.
+- O checklist em [`tests/test_checklist.md`](./tests/test_checklist.md) registra o que foi verificado e as pendências: limpeza das credenciais fictícias no histórico Git, teste de permissões com perfil não administrador, validação completa dos formulários, proteção CSRF e limitação de tentativas de login.
 
 ---
 
