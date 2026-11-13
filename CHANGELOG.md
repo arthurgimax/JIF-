@@ -100,3 +100,9 @@ Registro histórico de decisões arquiteturais, alterações, revisões humanas 
 - Schema SQLite de contingência e seed executados em teste isolado com Python SQLite: 10 tabelas criadas e dados fictícios carregados; todas as contas seed inativas.
 - Testes de integração PHP dependem de `pdo_mysql` ou `pdo_sqlite`; o ambiente de auditoria atual não possui esses drivers, então não podem ser declarados aprovados aqui.
 - Risco identificado na referência remota `origin/main`: um commit antigo ainda rastreia `jif_plus.sqlite` com contas ativas e matrículas. O arquivo foi removido da versão local atual, mas a sincronização e eventual limpeza do histórico remoto permanecem pendentes.
+
+## [1.0.3-tests] — 13/11/2026 — Correção identificada pela integração contínua
+
+- **Falha detectada pelo GitHub Actions:** a suíte de aceite CA13 reutilizava o mesmo placeholder nomeado `:id` duas vezes na consulta PDO, incompatível com prepared statements nativos do MySQL.
+- **Correção:** substituídos por `:equipe_a_id` e `:equipe_b_id`, ambos vinculados ao identificador da equipe testada.
+- **Validação:** a correção foi enviada ao repositório; a nova execução do workflow ainda precisa concluir para confirmar a suíte completa.
