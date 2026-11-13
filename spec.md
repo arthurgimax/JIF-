@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.7 — instalação local documentada)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.8 — instalação documentada e CI 17/17 aprovado)
 
 ---
 
@@ -416,25 +416,25 @@ A conformidade do sistema foi validada por uma bateria automatizada de testes im
 
 | Critério | Requisito | Cenário de Teste Previsto | Status de Execução |
 | :---: | :---: | :--- | :---: |
-| **CA01** | RF01 | Cadastro de novo usuário persistido com hash bcrypt e validação de e-mail único. | **Implementado; reexecução pendente** |
-| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Parcialmente verificado em produção: login administrativo válido; teste de senha inválida pendente** |
-| **CA03** | RF03 | Bloqueio de acesso a páginas administrativas por usuários sem privilégio (RBAC) e liberação para Administrador. | **Implementado; reexecução pendente** |
-| **CA04** | RF04 | Cadastro e persistência de campus/instituição participante no banco de dados. | **Implementado; reexecução pendente** |
-| **CA05** | RF05 | Cadastro de competição com datas de início/fim e gravação do status inicial "planejada". | **Implementado; reexecução pendente** |
-| **CA06** | RF06 | Associação de modalidade esportiva vinculada a uma competição com categoria e formato válidos. | **Implementado; reexecução pendente** |
-| **CA07** | RF07 | Inscrição de equipes com chaves estrangeiras válidas de instituição, competição e modalidade. | **Implementado; reexecução pendente** |
-| **CA08** | RF08 | Inscrição de estudante-atleta com matrícula institucional, dorsal (número de camisa) e posição tática. | **Implementado; reexecução pendente** |
-| **CA09** | RF09 | Consulta e renderização completa de perfil individual (BID) com histórico de partidas e gols. | **Implementado; reexecução pendente** |
-| **CA10** | RF10 | Agendamento de confronto entre equipes distintas pertencentes à mesma competição e modalidade. | **Implementado; reexecução pendente** |
-| **CA11** | RF11 | Lançamento de placares parciais/finais e transição de status da partida para "encerrada". | **Implementado; reexecução pendente** |
-| **CA12** | RF12 | Registro de eventos individuais na súmula (gols e faltas) com reflexo imediato no perfil do atleta. | **Implementado; reexecução pendente** |
-| **CA13** | RF13 | Visualização pública da equipe com elenco escalado, comissão técnica e histórico de resultados. | **Implementado; reexecução pendente** |
-| **CA14** | RF14 | Mecanismo de busca textual parametrizada por nome de atleta e filtros esportivos combinados. | **Implementado; reexecução pendente** |
-| **CA15** | RF15 | Cálculo automático da tabela de classificação (pontos 3/1/0, saldo de gols e gols pró). | **Implementado; reexecução pendente** |
-| **CA16** | RF16 | Rejeição no servidor de entradas inválidas ou malformadas, com mensagens de erro claras. | **Parcial; reexecução pendente** |
-| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Verificação manual parcial em produção: cadastro de atleta persistido e exibido na consulta pública; suíte automatizada pendente** |
+| **CA01** | RF01 | Cadastro de novo usuário persistido com hash bcrypt e validação de e-mail único. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Aprovado no GitHub Actions: login válido e rejeição de senha incorreta; login administrativo também confirmado manualmente em produção** |
+| **CA03** | RF03 | Bloqueio de acesso a páginas administrativas por usuários sem privilégio (RBAC) e liberação para Administrador. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA04** | RF04 | Cadastro e persistência de campus/instituição participante no banco de dados. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA05** | RF05 | Cadastro de competição com datas de início/fim e gravação do status inicial "planejada". | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA06** | RF06 | Associação de modalidade esportiva vinculada a uma competição com categoria e formato válidos. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA07** | RF07 | Inscrição de equipes com chaves estrangeiras válidas de instituição, competição e modalidade. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA08** | RF08 | Inscrição de estudante-atleta com matrícula institucional, dorsal (número de camisa) e posição tática. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA09** | RF09 | Consulta e renderização completa de perfil individual (BID) com histórico de partidas e gols. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA10** | RF10 | Agendamento de confronto entre equipes distintas pertencentes à mesma competição e modalidade. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA11** | RF11 | Lançamento de placares parciais/finais e transição de status da partida para "encerrada". | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA12** | RF12 | Registro de eventos individuais na súmula (gols e faltas) com reflexo imediato no perfil do atleta. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA13** | RF13 | Visualização pública da equipe com elenco escalado, comissão técnica e histórico de resultados. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA14** | RF14 | Mecanismo de busca textual parametrizada por nome de atleta e filtros esportivos combinados. | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA15** | RF15 | Cálculo automático da tabela de classificação (pontos 3/1/0, saldo de gols e gols pró). | **Aprovado no GitHub Actions em 13/11/2026** |
+| **CA16** | RF16 | Rejeição no servidor de entradas inválidas ou malformadas, com mensagens de erro claras. | **Teste CA16 aprovado no GitHub Actions; revisão integral de todos os formulários ainda pendente** |
+| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Aprovado no GitHub Actions; cadastro e consulta de atleta também confirmados manualmente em produção** |
 
-**Resultado Geral dos Testes nesta revisão**: a suíte automatizada de 17 critérios está disponível, mas não foi executada integralmente nesta homologação. Foram realizados testes manuais no ambiente publicado: abertura da página inicial em janela anônima, login administrativo e cadastro de um atleta fictício seguido de consulta na página pública do BID. Esses testes comprovam parte do fluxo de autenticação e persistência, mas não substituem a execução de `php tests/test_full_suite.php` nem validam todos os critérios CA01 a CA17.
+**Resultado Geral dos Testes nesta revisão**: o workflow do GitHub Actions [43461490652](https://github.com/arthurgimax/JIF-/actions/runs/43461490652), executado no commit `21128e071c72d394dd39d62e2c7f73ee8d90a086`, terminou com sucesso em 13/11/2026. O ambiente de CI utilizou PHP 8.4 e MySQL 8.0.46; as verificações de sintaxe PHP, conexão e tabelas, autenticação/RBAC e a suíte completa foram aprovadas. O log registra **17 de 17 critérios CA01–CA17 aprovados**. Também foram realizados testes manuais no ambiente publicado: abertura da página inicial em janela anônima, login administrativo e cadastro de um atleta fictício seguido de consulta na página pública do BID. A aprovação da suíte automatizada não substitui a homologação de instalação em um computador limpo nem encerra as pendências do checklist de segurança.
 
 ---
 
@@ -622,7 +622,7 @@ Esse roteiro exercita autenticação, gravação de cadastro e consulta posterio
 ### 15.9. Limitações conhecidas e verificações pendentes
 
 - O checklist em [tests/test_checklist.md](./tests/test_checklist.md) é a referência do estado de segurança. Não se declara aprovação integral sem executar os testes.
-- A suíte automatizada CA01–CA17 precisa ser executada em ambiente com PDO MySQL e seu resultado real registrado.
+- A suíte automatizada CA01–CA17 foi executada com sucesso no GitHub Actions (PHP 8.4 + MySQL 8.0.46), com 17/17 critérios aprovados. Recomenda-se também executar os comandos localmente durante a instalação em outro computador.
 - Ainda precisam de evidência final: teste de bloqueio de rotas administrativas com usuário sem privilégio, teste externo de bloqueio de /.env e /config/database.php, revisão integral das validações dos formulários, proteção CSRF e limitação de tentativas de login.
 - O histórico Git público contém valores antigos de demonstração e um segredo estático de exemplo em commits anteriores. As contas atuais do seed são inativas e as credenciais do banco de produção não estão no .env.example atual; contudo, os valores históricos continuam visíveis e a limpeza do histórico permanece pendente. Não reutilize esses valores em produção.
 - O sistema foi desenvolvido e documentado para Windows/XAMPP. A execução em macOS/Linux não foi homologada nesta entrega.
@@ -662,13 +662,13 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 - **Fluxo funcional verificado:** login de administrador concluído; atleta fictício cadastrado no painel e localizado na listagem pública. Isso comprova parcialmente autenticação e persistência de dados em produção.
 - **Banco remoto:** phpMyAdmin exibiu as 10 tabelas previstas. As credenciais estão no `.env` do servidor e não devem ser copiadas para o GitHub ou para esta especificação.
 - **Vercel/Supabase:** não utilizados. Vercel não executa diretamente esta aplicação PHP/Apache; Supabase não hospeda PHP e exigiria migração MySQL para PostgreSQL.
-- **Testes automatizados:** suíte CA01–CA17 presente no repositório, mas ainda não executada integralmente nesta homologação. Não há declaração de aprovação total.
+- **Testes automatizados:** GitHub Actions concluiu com sucesso no commit `21128e071c72d394dd39d62e2c7f73ee8d90a086`; PHP 8.4, MySQL 8.0.46 e 17/17 critérios CA01–CA17 aprovados. [Ver execução](https://github.com/arthurgimax/JIF-/actions/runs/43461490652).
 - **HTTPS:** confirmado pelo responsável em janela anônima; o navegador exibe conexão segura. Registro baseado na confirmação visual do responsável em 13/11/2026.
 - **Colaborador do GitHub:** a consulta de permissões em 13/11/2026 retornou write para rafaelpitwak.
 - **Segurança do arquivo de ambiente:** `.env` é ignorado pelo Git e o `.htaccess` contém regras de bloqueio, mas o bloqueio externo deve ser confirmado com teste de acesso direto.
 - **Contas demonstrativas em produção:** o responsável confirmou que desativou os cinco usuários adicionais de demonstração pelo painel administrativo, preservando a conta principal e sem excluir registros.
 - **Histórico Git:** o repositório público contém commits anteriores desde outubro de 2026, mas um commit inicial ainda expõe credenciais de demonstração e um `SESSION_SECRET` estático de exemplo. A desativação no banco de produção não remove esses dados do histórico; permanece necessária a limpeza do histórico ou a restrição do repositório com acesso liberado ao professor.
-- **Checklist de segurança:** senhas com hash e login administrativo foram exercitados; prepared statements e controle de acesso foram revisados no código; HTTPS foi confirmado visualmente em janela anônima. Validação integral de formulários, teste RBAC negativo, bloqueio externo do `.env`, limpeza do histórico Git, CSRF e limitação de tentativas continuam pendentes.
+- **Checklist de segurança:** senhas com hash e login administrativo foram exercitados; prepared statements e controle de acesso foram revisados no código; HTTPS foi confirmado visualmente em janela anônima. Validação integral de todos os formulários, teste RBAC negativo no ambiente publicado, bloqueio externo do `.env`, limpeza do histórico Git, CSRF e limitação de tentativas continuam pendentes.
 ## 18. Histórico de Versões
 
 | Versão | Data | Autor | Resumo das Modificações e Evoluções Registradas |
@@ -681,4 +681,4 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 | **1.0.4** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Publicação manual no InfinityFree; login administrativo e fluxo de cadastro/consulta de atleta confirmados. HTTPS, suíte automatizada completa e revisão do histórico Git permanecem pendentes. |
 | **1.0.5** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Registro da desativação dos cinco usuários demonstrativos em produção, preservando a conta administrativa principal. |
 | **1.0.6** | 13/11/2026 | Arthur Henrique Gimax Oliveira | HTTPS confirmado visualmente em janela anônima pelo responsável; documentação e checklist atualizados. A limpeza das credenciais fictícias no histórico Git e a execução da suíte automatizada permanecem pendentes. |
-| **1.0.7** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Guia reproduzível de instalação e execução local adicionado com ambiente, dependências, variáveis de ambiente, criação do banco, dicionário resumido das 10 tabelas, primeiro administrador de teste e roteiro de validação. Permissão write de rafaelpitwak confirmada no repositório. Testes automatizados e pendências de segurança continuam registrados sem declaração de aprovação integral. |
+| **1.0.7** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Guia reproduzível de instalação e execução local adicionado com ambiente, dependências, variáveis de ambiente, criação do banco, dicionário resumido das 10 tabelas, primeiro administrador de teste e roteiro de validação. Permissão write de rafaelpitwak confirmada no repositório. |\n| **1.0.8** | 13/11/2026 | Arthur Henrique Gimax Oliveira | GitHub Actions executado com sucesso no commit 21128e0: verificação de sintaxe, conexão MySQL, autenticação/RBAC e 17/17 critérios CA01–CA17 aprovados com PHP 8.4 e MySQL 8.0.46. As pendências do checklist de segurança e a homologação de instalação em máquina limpa permanecem explicitamente registradas. |
