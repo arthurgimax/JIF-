@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.2 — Revisão para publicação)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.3 — Publicação e homologação manual)
 
 ---
 
@@ -12,7 +12,7 @@
 - **Docente Responsável**: Prof. Rafael Pitwak
 - **Estudante Autor**: Arthur Henrique Gimax Oliveira
 - **Repositório Oficial**: [github.com/arthurgimax/JIF-](https://github.com/arthurgimax/JIF-)
-- **Versão do Documento**: 1.0.2 (revisão técnica para publicação)
+- **Versão do Documento**: 1.0.3 (publicação e homologação manual)
 - **Data da Revisão**: 13 de novembro de 2026
 
 ---
@@ -417,7 +417,7 @@ A conformidade do sistema foi validada por uma bateria automatizada de testes im
 | Critério | Requisito | Cenário de Teste Previsto | Status de Execução |
 | :---: | :---: | :--- | :---: |
 | **CA01** | RF01 | Cadastro de novo usuário persistido com hash bcrypt e validação de e-mail único. | **Implementado; reexecução pendente** |
-| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Implementado; reexecução pendente** |
+| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Parcialmente verificado em produção: login administrativo válido; teste de senha inválida pendente** |
 | **CA03** | RF03 | Bloqueio de acesso a páginas administrativas por usuários sem privilégio (RBAC) e liberação para Administrador. | **Implementado; reexecução pendente** |
 | **CA04** | RF04 | Cadastro e persistência de campus/instituição participante no banco de dados. | **Implementado; reexecução pendente** |
 | **CA05** | RF05 | Cadastro de competição com datas de início/fim e gravação do status inicial "planejada". | **Implementado; reexecução pendente** |
@@ -432,9 +432,9 @@ A conformidade do sistema foi validada por uma bateria automatizada de testes im
 | **CA14** | RF14 | Mecanismo de busca textual parametrizada por nome de atleta e filtros esportivos combinados. | **Implementado; reexecução pendente** |
 | **CA15** | RF15 | Cálculo automático da tabela de classificação (pontos 3/1/0, saldo de gols e gols pró). | **Implementado; reexecução pendente** |
 | **CA16** | RF16 | Rejeição no servidor de entradas inválidas ou malformadas, com mensagens de erro claras. | **Parcial; reexecução pendente** |
-| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Implementado; reexecução pendente** |
+| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Verificação manual parcial em produção: cadastro de atleta persistido e exibido na consulta pública; suíte automatizada pendente** |
 
-**Resultado Geral dos Testes nesta revisão**: a suíte automatizada existe, mas não foi possível executá-la neste ambiente porque os drivers PDO para SQLite/MySQL não estão instalados. Portanto, nenhum percentual de aprovação é declarado nesta revisão. Execute `php tests/test_full_suite.php` em ambiente com a extensão PDO correspondente e registre a saída real antes da entrega.
+**Resultado Geral dos Testes nesta revisão**: a suíte automatizada de 17 critérios está disponível, mas não foi executada integralmente nesta homologação. Foram realizados testes manuais no ambiente publicado: abertura da página inicial em janela anônima, login administrativo e cadastro de um atleta fictício seguido de consulta na página pública do BID. Esses testes comprovam parte do fluxo de autenticação e persistência, mas não substituem a execução de `php tests/test_full_suite.php` nem validam todos os critérios CA01 a CA17.
 
 ---
 
@@ -457,17 +457,27 @@ O sistema está plenamente funcional e configurado para execução local no serv
    - URL Principal: `http://localhost/4°Bim - Arthur Gimax - JIF+/`
    - URL Administrativa: `http://localhost/4°Bim - Arthur Gimax - JIF+/admin/`
 
-### 15.2. Diretrizes de Publicação Externa (Fase 6 da Metodologia)
-Conforme preconizado na apostila metodológica do professor:
-- **Status Atual da Implantação**: o projeto foi desenvolvido para execução local no XAMPP; nesta revisão, a execução completa não foi revalidada porque o ambiente de auditoria não possui os drivers PDO de banco.
-- **Critério de Conclusão da Implantação Remota**: A publicação em ambiente de produção remoto só deve ser considerada formalmente concluída quando houver uma **URL pública funcional e ativa na internet**.
-- **Provedores de Hospedagem Compatíveis com a Stack LAMP**:
-  - Para a publicação definitiva do JIF+, recomenda-se o uso de provedores com suporte nativo a PHP 8.x e MySQL gerenciado, tais como:
-    1. **InfinityFree**: opção gratuita a avaliar para manter PHP + MySQL/MariaDB sem migrar o código. O plano e os limites devem ser conferidos no momento do deploy.
-    2. **Render/Railway com Docker**: alternativa técnica, mas exige banco persistente externo e configuração adicional.
-    3. **Servidor Institucional do IFRO**: alternativa caso exista infraestrutura disponível.
-- **Configuração de Variáveis na Produção**: No servidor remoto, as credenciais de banco de dados devem ser preenchidas no painel de controle da hospedagem ou em arquivo `.env` protegido, assegurando conformidade com o RNF04.
+### 15.2. Publicação Externa e Homologação (Fase 6 da Metodologia)
 
+- **Provedor escolhido:** InfinityFree, para preservar a stack PHP + PDO + MySQL/MariaDB sem reescrever o backend.
+- **Domínio publicado:** `jifplus-ifro.free.nf`.
+- **Diretório remoto:** `/htdocs`; os arquivos PHP, CSS, JavaScript e pastas da aplicação foram enviados diretamente para a raiz pública.
+- **Banco remoto:** MySQL criado no painel do InfinityFree; o phpMyAdmin exibiu as 10 tabelas previstas. As credenciais de conexão foram armazenadas no arquivo `.env` da hospedagem, fora do repositório.
+- **Conta administrativa:** conta própria criada com hash bcrypt; login no painel administrativo foi realizado com sucesso.
+- **Teste de persistência:** um atleta fictício foi cadastrado pelo painel administrativo e apareceu na listagem pública do BID, confirmando escrita e leitura no banco remoto.
+- **Teste de acesso público:** página inicial e listagem de atletas abertas em janela anônima.
+- **HTTPS/TLS:** pendente de homologação. A captura do navegador exibiu o indicador “Não seguro”; portanto, o requisito RNF08 ainda não pode ser considerado atendido.
+- **Testes automatizados:** a suíte CA01–CA17 permanece pendente de execução integral no ambiente com PDO MySQL. Os testes manuais realizados não autorizam declarar aprovação total.
+
+#### Decisão sobre Vercel e Supabase
+- **Vercel:** não é destino direto para a aplicação PHP/Apache convencional; exigiria adaptar o backend para funções compatíveis ou reestruturar a aplicação.
+- **Supabase:** oferece PostgreSQL e serviços de backend, mas não executa PHP. A adoção exigiria migrar o esquema MySQL e revisar as consultas PDO.
+- **Decisão desta entrega:** InfinityFree foi escolhido para manter a stack original e cumprir a publicação sem migração de tecnologia. Render com Docker é alternativa possível, mas requer configuração adicional e banco persistente externo.
+
+#### Segurança da publicação
+- O repositório atual contém `.gitignore` para excluir `.env` e bancos locais. O `.htaccess` configura bloqueio de acesso direto a arquivos de ambiente e pastas internas; a resposta de bloqueio deve ser testada externamente antes da entrega.
+- A versão atual do seed cria contas de demonstração inativas. Contudo, o histórico público antigo contém credenciais de demonstração e um `SESSION_SECRET` estático de exemplo. É necessário confirmar que as contas de demonstração estão inativas no banco de produção e decidir a limpeza do histórico ou a restrição do repositório com acesso liberado ao professor.
+- Permanecem pendentes: validar certificado HTTPS, confirmar bloqueio externo do `.env`, testar bloqueio RBAC com usuário sem privilégio, executar a suíte automatizada e revisar integralmente validações administrativas, CSRF e limitação de tentativas de login.
 ---
 
 ## 16. Limitações Conhecidas e Melhorias Futuras
@@ -499,16 +509,16 @@ O sistema entrega um ecossistema digital funcional, seguro e visualmente profiss
 
 ## Status de publicação e validação (revisão de 13/11/2026)
 
-- **Stack confirmada no código**: PHP tradicional, PDO e esquema MySQL/MariaDB; há também um mecanismo de contingência SQLite para desenvolvimento local.
-- **Vercel**: não hospeda diretamente este projeto como aplicação PHP tradicional sem reestruturação para funções compatíveis.
-- **Supabase**: fornece PostgreSQL, não execução PHP. A utilização exigiria migração do esquema MySQL e revisão das consultas; não é uma troca direta.
-- **Render**: pode hospedar PHP via Docker, mas requer banco persistente externo ou serviço compatível; não foi provisionado.
-- **Destino de deploy escolhido para preservar a stack**: hospedagem PHP + MySQL/MariaDB; InfinityFree é a opção gratuita considerada. Vercel não é o destino direto para esta aplicação PHP tradicional; Supabase exigiria migração do MySQL para PostgreSQL e não executa PHP.
-- **Deploy**: pendente. Nenhuma URL pública foi confirmada.
-- **Testes automatizados**: scripts presentes; execução não confirmada nesta revisão por ausência dos drivers PDO de banco no ambiente de auditoria.
-- **Segurança**: `.env` está ignorado pelo Git e não rastreado na cópia local. As contas técnicas do seed foram desativadas e o cadastro público não pode criar perfis privilegiados. O checklist do Anexo B registra validação parcial dos formulários, limpeza do histórico remoto pendente e HTTPS pendente de publicação.
-- **Git**: a cópia local e `origin/main` estão divergentes; reconciliar o histórico antes de atualizar o repositório remoto. A referência remota ainda rastreia `jif_plus.sqlite` em commit antigo; o arquivo contém contas ativas e identificadores estudantis. A versão local revisada não o inclui. A limpeza do histórico remoto deve ser decidida antes de tornar o repositório público.
-
+- **Stack em produção:** PHP tradicional com PDO e MySQL/MariaDB, hospedado no InfinityFree.
+- **URL pública:** `jifplus-ifro.free.nf`; a página inicial e a listagem BID foram abertas em janela anônima.
+- **Fluxo funcional verificado:** login de administrador concluído; atleta fictício cadastrado no painel e localizado na listagem pública. Isso comprova parcialmente autenticação e persistência de dados em produção.
+- **Banco remoto:** phpMyAdmin exibiu as 10 tabelas previstas. As credenciais estão no `.env` do servidor e não devem ser copiadas para o GitHub ou para esta especificação.
+- **Vercel/Supabase:** não utilizados. Vercel não executa diretamente esta aplicação PHP/Apache; Supabase não hospeda PHP e exigiria migração MySQL para PostgreSQL.
+- **Testes automatizados:** suíte CA01–CA17 presente no repositório, mas ainda não executada integralmente nesta homologação. Não há declaração de aprovação total.
+- **HTTPS:** pendente. O navegador exibiu “Não seguro”; o certificado TLS precisa ser configurado e validado antes de declarar RNF08 conforme.
+- **Segurança do arquivo de ambiente:** `.env` é ignorado pelo Git e o `.htaccess` contém regras de bloqueio, mas o bloqueio externo deve ser confirmado com teste de acesso direto.
+- **Histórico Git:** o repositório público contém commits anteriores desde outubro de 2026, mas um commit inicial ainda expõe credenciais de demonstração e um `SESSION_SECRET` estático de exemplo. O seed atual desativa as contas de demonstração; confirmar a inativação no banco de produção e decidir a limpeza do histórico ou a restrição do repositório com acesso do professor.
+- **Checklist de segurança:** senhas com hash e login administrativo foram exercitados; prepared statements e controle de acesso foram revisados no código. Validação integral de formulários, teste RBAC negativo, TLS, bloqueio externo do `.env`, CSRF e limitação de tentativas continuam pendentes.
 ## 18. Histórico de Versões
 
 | Versão | Data | Autor | Resumo das Modificações e Evoluções Registradas |
