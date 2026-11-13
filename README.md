@@ -168,29 +168,39 @@ A suíte está disponível, mas o resultado precisa ser reexecutado no ambiente 
 
 ---
 
-## 🌐 Publicação gratuita — decisão técnica
+## 🌐 Publicação atual — InfinityFree
 
-O JIF+ é uma aplicação PHP tradicional com PDO e esquema MySQL/MariaDB. **Vercel não é o destino direto adequado para este código PHP/Apache**. O Supabase oferece PostgreSQL, mas não hospeda o PHP e exigiria migrar o esquema MySQL e revisar consultas. Para preservar o projeto e evitar reescrita, a decisão recomendada para esta atividade é uma hospedagem PHP + MySQL, como o plano gratuito do InfinityFree.
+O JIF+ foi publicado no InfinityFree para esta atividade, mantendo a stack original **PHP + PDO + MySQL**.
 
-Antes de criar a conta, confirme no painel do provedor que a versão PHP disponível é 8.2 ou superior e confira os limites do plano gratuito. O serviço não deve ser tratado como hospedagem de produção crítica.
+- **Domínio:** `jifplus-ifro.free.nf`
+- **Pasta de publicação:** `/htdocs`
+- **Banco:** MySQL do InfinityFree, com as 10 tabelas previstas.
+- **Configuração:** credenciais guardadas no `.env` do servidor; o arquivo não deve ser enviado ao GitHub.
+- **Fluxos verificados manualmente:** página inicial aberta em janela anônima; login de administrador concluído; cadastro de um atleta fictício no painel e confirmação do registro na listagem pública do BID.
 
-### Passo a passo resumido de publicação
+> **Pendência de segurança:** na captura da homologação, o Chrome exibiu “Não seguro”. O domínio está acessível, mas o certificado TLS/HTTPS ainda não foi confirmado. Não considere o requisito HTTPS concluído até o navegador exibir conexão segura e o teste ser repetido em janela anônima.
 
-1. Crie uma conta no provedor e um subdomínio gratuito. Guarde os dados do painel e FTP em local privado.
-2. No painel da hospedagem, crie um banco MySQL e anote exatamente o host, nome do banco, usuário e senha apresentados pelo provedor.
-3. Abra o phpMyAdmin do banco criado, selecione o banco e importe **somente `database/schema.sql`**. O schema é não destrutivo e cria as 10 tabelas.
-4. Para deixar o sistema demonstrável, importe também `database/seed.sql`: ele contém apenas dados fictícios e as contas de demonstração estão inativas. Depois, crie seu próprio administrador usando um hash bcrypt gerado localmente (instruções acima).
-5. Envie os arquivos do projeto para a pasta `htdocs` via FTP/File Manager. Não envie `.git/`, `.env`, `config.local.php`, o banco SQLite local, `tests/` nem a apostila PDF.
-6. Configure no servidor um arquivo `.env` privado na raiz da aplicação com `APP_ENV=production`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` e `DB_CHARSET=utf8mb4`. Use os valores reais fornecidos pelo painel; não copie placeholders deste README.
-7. Ative/solicite SSL no painel do provedor e confirme que a aplicação abre por `https://`.
-8. Teste em janela anônima: cadastro público de atleta, login, acesso administrativo com a conta criada, cadastro de uma instituição/competição e consulta pública dos dados.
-9. Depois dos testes, confira o histórico do GitHub e abra a URL publicada em outro dispositivo ou navegador sem sessão autenticada.
+### Decisão sobre Vercel e Supabase
 
-O banco SQLite `database/jif_plus.sqlite`, quando existente, é um arquivo de desenvolvimento local e pode conter contas e registros pessoais. Ele não deve ser enviado ao GitHub nem copiado para a hospedagem pública; a migração dos dados locais para MySQL deve ser feita separadamente e somente se esses registros forem necessários.
+- **Vercel:** não é o destino direto desta aplicação PHP/Apache convencional; seria necessário reestruturar o backend para funções compatíveis ou migrar a aplicação.
+- **Supabase:** fornece PostgreSQL e serviços de banco/autenticação, mas não hospeda o backend PHP. A troca do MySQL por PostgreSQL exigiria migração do esquema e revisão das consultas PDO.
+- **Decisão desta entrega:** InfinityFree foi escolhido para preservar PHP + MySQL e evitar reescrita incompatível com o prazo da atividade. Render com Docker seria outra alternativa para PHP, mas exige configuração de servidor e banco persistente externo.
 
-O arquivo `.htaccess` bloqueia acesso HTTP às pastas internas (`config`, `database`, `tests`, `includes`) e a arquivos de configuração/SQL/banco. O instalador `database/setup.php` só pode ser executado por CLI e não deve ser enviado à hospedagem pública.
+### Procedimento de publicação realizado
 
-**Status:** a publicação não foi executada nesta cópia. A URL pública só será informada depois que o domínio for criado, o banco configurado e o fluxo principal testado.
+1. Criada a conta de hospedagem e o subdomínio no InfinityFree.
+2. Criado o banco MySQL e conferidas as 10 tabelas no phpMyAdmin.
+3. Criado um administrador próprio usando hash bcrypt; o login foi validado no ambiente publicado.
+4. Enviados os arquivos da aplicação diretamente para `/htdocs`.
+5. Criado o arquivo `.env` na raiz da hospedagem com `APP_ENV=production` e as variáveis `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` e `DB_CHARSET`. **Os valores reais não devem ser documentados nem versionados.**
+6. Testados a página inicial, o painel administrativo e o fluxo de cadastro/consulta de atleta.
+
+### Segurança e testes pendentes
+
+- O `.gitignore` exclui `.env` e arquivos locais de banco; o `.htaccess` contém regras para negar acesso direto a arquivos de ambiente e pastas internas. Ainda é necessário confirmar externamente que essas URLs retornam bloqueio (403/404), sem exibir conteúdo.
+- O histórico público contém credenciais antigas de demonstração e um `SESSION_SECRET` estático de exemplo em um commit anterior. A versão atual do seed desativa as contas de demonstração, mas é necessário conferir no banco de produção que todas permanecem inativas e decidir a limpeza do histórico ou a restrição do repositório com acesso do professor.
+- A suíte automatizada de 17 critérios não foi executada nesta homologação; os testes manuais não substituem a execução completa.
+- O checklist em [`tests/test_checklist.md`](./tests/test_checklist.md) registra o que foi verificado e as pendências: TLS/HTTPS, histórico Git, teste de permissões com perfil não administrador, validação completa dos formulários, proteção CSRF e limitação de tentativas de login.
 
 ---
 
