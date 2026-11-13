@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.5 — Publicação, homologação e revisão de contas demonstrativas)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.6 — HTTPS confirmado e revisão final de publicação)
 
 ---
 
@@ -12,7 +12,7 @@
 - **Docente Responsável**: Prof. Rafael Pitwak
 - **Estudante Autor**: Arthur Henrique Gimax Oliveira
 - **Repositório Oficial**: [github.com/arthurgimax/JIF-](https://github.com/arthurgimax/JIF-)
-- **Versão do Documento**: 1.0.5 (publicação, homologação e revisão de contas demonstrativas)
+- **Versão do Documento**: 1.0.6 (HTTPS confirmado e revisão final de publicação)
 - **Data da Revisão**: 13 de novembro de 2026
 
 ---
@@ -466,7 +466,7 @@ O sistema está plenamente funcional e configurado para execução local no serv
 - **Conta administrativa:** conta própria criada com hash bcrypt; login no painel administrativo foi realizado com sucesso.
 - **Teste de persistência:** um atleta fictício foi cadastrado pelo painel administrativo e apareceu na listagem pública do BID, confirmando escrita e leitura no banco remoto.
 - **Teste de acesso público:** página inicial e listagem de atletas abertas em janela anônima.
-- **HTTPS/TLS:** pendente de homologação. A captura do navegador exibiu o indicador “Não seguro”; portanto, o requisito RNF08 ainda não pode ser considerado atendido.
+- **HTTPS/TLS:** confirmado pelo responsável em janela anônima em 13/11/2026; o navegador passou a exibir conexão segura. A validação registrada é visual e não substitui monitoramento contínuo do certificado.
 - **Testes automatizados:** a suíte CA01–CA17 permanece pendente de execução integral no ambiente com PDO MySQL. Os testes manuais realizados não autorizam declarar aprovação total.
 
 #### Decisão sobre Vercel e Supabase
@@ -476,7 +476,7 @@ O sistema está plenamente funcional e configurado para execução local no serv
 
 #### Segurança da publicação
 - O repositório atual contém `.gitignore` para excluir `.env` e bancos locais. O `.htaccess` configura bloqueio de acesso direto a arquivos de ambiente e pastas internas; a resposta de bloqueio deve ser testada externamente antes da entrega.
-- A versão atual do seed cria contas de demonstração inativas. Contudo, o histórico público antigo contém credenciais de demonstração e um `SESSION_SECRET` estático de exemplo. É necessário confirmar que as contas de demonstração estão inativas no banco de produção e decidir a limpeza do histórico ou a restrição do repositório com acesso liberado ao professor.
+- A versão atual do seed cria contas de demonstração inativas. O responsável confirmou que desativou os cinco usuários demonstrativos adicionais no banco de produção, preservando sua conta principal. O histórico público antigo ainda contém credenciais fictícias de demonstração e um `SESSION_SECRET` de exemplo; não são credenciais do banco de produção, mas continuam visíveis e exigem reescrita do histórico Git para conformidade integral.
 - Permanecem pendentes: validar certificado HTTPS, confirmar bloqueio externo do `.env`, testar bloqueio RBAC com usuário sem privilégio, executar a suíte automatizada e revisar integralmente validações administrativas, CSRF e limitação de tentativas de login.
 ---
 
@@ -515,9 +515,9 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 - **Banco remoto:** phpMyAdmin exibiu as 10 tabelas previstas. As credenciais estão no `.env` do servidor e não devem ser copiadas para o GitHub ou para esta especificação.
 - **Vercel/Supabase:** não utilizados. Vercel não executa diretamente esta aplicação PHP/Apache; Supabase não hospeda PHP e exigiria migração MySQL para PostgreSQL.
 - **Testes automatizados:** suíte CA01–CA17 presente no repositório, mas ainda não executada integralmente nesta homologação. Não há declaração de aprovação total.
-- **HTTPS:** pendente. O navegador exibiu “Não seguro”; o certificado TLS precisa ser configurado e validado antes de declarar RNF08 conforme.
+- **HTTPS:** confirmado pelo responsável em janela anônima; o navegador exibe conexão segura. Registro baseado na confirmação visual do responsável em 13/11/2026.
 - **Segurança do arquivo de ambiente:** `.env` é ignorado pelo Git e o `.htaccess` contém regras de bloqueio, mas o bloqueio externo deve ser confirmado com teste de acesso direto.
-- **Contas demonstrativas em produção:** após identificar cinco usuários adicionais como exclusivamente demonstrativos, o responsável informou que os desativou pelo painel administrativo, preservando a conta principal e sem excluir registros. A situação após a ação ainda precisa de confirmação visual ou consulta ao banco.
+- **Contas demonstrativas em produção:** após identificar cinco usuários adicionais como exclusivamente demonstrativos, o responsável informou que os desativou pelo painel administrativo, preservando a conta principal e sem excluir registros. O responsável confirmou que concluiu a desativação dos cinco usuários demonstrativos adicionais em produção.
 - **Histórico Git:** o repositório público contém commits anteriores desde outubro de 2026, mas um commit inicial ainda expõe credenciais de demonstração e um `SESSION_SECRET` estático de exemplo. A desativação no banco de produção não remove esses dados do histórico; permanece necessária a limpeza do histórico ou a restrição do repositório com acesso liberado ao professor.
 - **Checklist de segurança:** senhas com hash e login administrativo foram exercitados; prepared statements e controle de acesso foram revisados no código. Validação integral de formulários, teste RBAC negativo, TLS, bloqueio externo do `.env`, CSRF e limitação de tentativas continuam pendentes.
 ## 18. Histórico de Versões
@@ -530,4 +530,4 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 | **1.0.2** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Revisão de segurança: cadastro público limitado ao perfil atleta, contas seed desativadas, schema não destrutivo, instalador CLI, variáveis de ambiente e checklist do Anexo B. |
 | **1.0.3** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Correção da suíte de testes identificada pela integração contínua, com substituição de placeholders PDO duplicados. |
 | **1.0.4** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Publicação manual no InfinityFree; login administrativo e fluxo de cadastro/consulta de atleta confirmados. HTTPS, suíte automatizada completa e revisão do histórico Git permanecem pendentes. |
-| **1.0.5** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Responsável informou desativação dos cinco usuários de demonstração na hospedagem, preservando a conta administrativa principal. Confirmação pós-alteração, HTTPS, suíte automatizada e revisão do histórico Git continuam pendentes. |
+| **1.0.5** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Registro da desativação dos cinco usuários demonstrativos em produção, preservando a conta administrativa principal. |\n| **1.0.6** | 13/11/2026 | Arthur Henrique Gimax Oliveira | HTTPS confirmado visualmente em janela anônima pelo responsável; documentação e checklist atualizados. A limpeza das credenciais fictícias no histórico Git e a execução da suíte automatizada permanecem pendentes. |
