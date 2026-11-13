@@ -133,3 +133,11 @@ Registro histórico de decisões arquiteturais, alterações, revisões humanas 
 - O responsável confirmou ter usado a ação **Desativar** para os cinco registros, preservando a conta administrativa principal e sem excluir linhas do banco.
 - A alteração foi realizada manualmente no painel publicado. O estado pós-alteração foi informado pelo responsável, mas ainda não foi confirmado por uma nova captura ou consulta direta ao banco.
 - As credenciais antigas de demonstração que permanecem em commits históricos continuam sendo uma pendência de segurança do repositório público; desativar as contas no banco de produção não remove esses dados do histórico Git.
+
+
+## [1.0.6] — 13/11/2026 — Confirmação de HTTPS e fechamento da publicação
+
+- **HTTPS/TLS:** o responsável confirmou que a URL pública passou a abrir em janela anônima com indicação de conexão segura. A documentação registra a confirmação visual, sem afirmar monitoramento contínuo do certificado.
+- **Contas de demonstração:** o responsável confirmou que desativou os cinco usuários demonstrativos adicionais no painel de produção, preservando a conta administrativa principal e sem excluir registros.
+- **Revisão humana:** mantida a hospedagem InfinityFree e a stack PHP + PDO + MySQL para evitar uma migração desnecessária para Vercel/Next.js ou Supabase/PostgreSQL dentro do prazo da atividade.
+- **Pendências declaradas:** o histórico público ainda contém credenciais fictícias de seed e um segredo estático de exemplo em commits antigos; a limpeza exige reescrita do histórico Git. A suíte automatizada completa, o teste negativo de RBAC, o teste externo de bloqueio de `/.env` e a revisão integral de formulários continuam sem evidência final e não são declarados concluídos.
