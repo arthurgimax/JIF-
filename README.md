@@ -139,9 +139,25 @@ As contas técnicas presentes no `seed.sql` ficam **inativas** e não possuem se
 
 Para criar o primeiro administrador em uma instalação nova:
 
-1. Gere um hash bcrypt no terminal do XAMPP, digitando a senha quando solicitado:
+1. Gere um hash bcrypt no PowerShell do Windows. O script temporário evita conflito de aspas e não coloca a senha na linha de comando:
    ```powershell
-   C:\xampp\php\php.exe -r '$p = trim(fgets(STDIN)); echo password_hash($p, PASSWORD_BCRYPT), PHP_EOL;'
+   $script = Join-Path $env:TEMP 'jif-hash.php'
+   @'
+   <?php
+   echo password_hash(getenv('JIF_ADMIN_PASSWORD'), PASSWORD_DEFAULT), PHP_EOL;
+   '@ | Set-Content -Path $script -Encoding ASCII
+
+   $senha = Read-Host "Digite a senha do administrador" -AsSecureString
+   $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($senha)
+   try {
+       $env:JIF_ADMIN_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
+       & "C:\xampp\php\php.exe" $script
+   }
+   finally {
+       Remove-Item Env:JIF_ADMIN_PASSWORD -ErrorAction SilentlyContinue
+       [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+       Remove-Item $script -ErrorAction SilentlyContinue
+   }
    ```
 2. Copie o hash gerado e, no phpMyAdmin, execute o comando abaixo substituindo nome, e-mail e `HASH_BCRYPT_GERADO`:
    ```sql
