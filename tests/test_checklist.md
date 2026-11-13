@@ -22,7 +22,7 @@ A conferência abaixo separa revisão de código, testes manuais executados na h
 
 ## Verificações pendentes antes da entrega
 
-- A desativação dos cinco usuários demonstrativos adicionais foi confirmada pelo responsável; preservar a conta administrativa principal.
+- A desativação dos cinco usuários demonstrativos adicionais foi confirmada pelo responsável; a conta administrativa principal foi preservada.
 - Limpar o histórico Git para remover credenciais fictícias de demonstração e o `SESSION_SECRET` de exemplo dos commits antigos; a versão atual não deve voltar a incluir esses valores.
 - Confirmar que uma requisição direta a `/.env` e a `/config/database.php` é bloqueada e não revela conteúdo.
 - HTTPS foi confirmado visualmente em janela anônima pelo responsável.
