@@ -38,12 +38,17 @@ jobs:
         run: |
           find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
 
-      - name: Preparar banco de testes
-        env:
-          MYSQL_PWD: root
+      - name: Preparar banco pelo instalador documentado
         run: |
-          mysql --protocol=tcp -h 127.0.0.1 -uroot jif_plus < database/schema.sql
-          mysql --protocol=tcp -h 127.0.0.1 -uroot jif_plus < database/seed.sql
+          cat > .env <<'EOF'
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          DB_NAME=jif_plus
+          DB_USER=root
+          DB_PASS=root
+          DB_CHARSET=utf8mb4
+          EOF
+          php database/setup.php
 
       - name: Testar conexão e tabelas
         env:
