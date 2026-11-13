@@ -125,3 +125,11 @@ Registro histórico de decisões arquiteturais, alterações, revisões humanas 
 - O arquivo `.htaccess` contém regras para negar acesso direto ao `.env` e às pastas internas, mas a resposta HTTP de bloqueio ainda precisa ser verificada externamente.
 - O histórico público contém credenciais antigas de demonstração e um segredo estático de exemplo. As contas seed da versão atual estão inativas; ainda é necessário confirmar o estado das contas seed no banco de produção e decidir sobre a limpeza do histórico antes da entrega definitiva.
 - A proteção CSRF, a limitação de tentativas de login e a validação completa de todos os campos administrativos permanecem como melhorias pendentes, conforme o checklist de segurança.
+
+
+## [1.0.5-security] — 13/11/2026 — Desativação de contas de demonstração em produção
+
+- Após a conferência humana da tela `/admin/usuarios.php`, o responsável informou que os cinco usuários adicionais eram exclusivamente demonstrativos.
+- O responsável confirmou ter usado a ação **Desativar** para os cinco registros, preservando a conta administrativa principal e sem excluir linhas do banco.
+- A alteração foi realizada manualmente no painel publicado. O estado pós-alteração foi informado pelo responsável, mas ainda não foi confirmado por uma nova captura ou consulta direta ao banco.
+- As credenciais antigas de demonstração que permanecem em commits históricos continuam sendo uma pendência de segurança do repositório público; desativar as contas no banco de produção não remove esses dados do histórico Git.
