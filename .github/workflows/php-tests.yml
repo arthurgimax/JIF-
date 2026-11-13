@@ -13,12 +13,12 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
           MYSQL_DATABASE: jif_plus
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -45,7 +45,7 @@ jobs:
           DB_PORT=3306
           DB_NAME=jif_plus
           DB_USER=root
-          DB_PASS=root
+          DB_PASS=
           DB_CHARSET=utf8mb4
           EOF
           php database/setup.php
@@ -57,7 +57,7 @@ jobs:
           DB_PORT: 3306
           DB_NAME: jif_plus
           DB_USER: root
-          DB_PASS: root
+          DB_PASS: ""
           DB_CHARSET: utf8mb4
         run: php tests/test_db_connection.php
 
