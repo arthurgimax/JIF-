@@ -124,8 +124,8 @@ $totalGolsAtleta = $pdo->query("SELECT SUM(valor) AS g FROM estatisticas_atletas
 assertTest($totalGolsAtleta == 2, 'CA12', 'Lançamento de gols na súmula e consolidação nas estatísticas do atleta');
 
 // CA13: Página da Equipe e Histórico
-$stmtHist = $pdo->prepare("SELECT COUNT(*) AS total FROM partidas WHERE equipe_a_id = :id OR equipe_b_id = :id");
-$stmtHist->execute([':id' => $idEqA]);
+$stmtHist = $pdo->prepare("SELECT COUNT(*) AS total FROM partidas WHERE equipe_a_id = :equipe_a_id OR equipe_b_id = :equipe_b_id");
+$stmtHist->execute([':equipe_a_id' => $idEqA, ':equipe_b_id' => $idEqA]);
 $totalHist = $stmtHist->fetch()['total'];
 assertTest($totalHist >= 1, 'CA13', 'Consulta ao histórico de partidas e integrantes da equipe');
 
