@@ -1,3 +1,18 @@
+## [1.0.9-ci-install] — 13/11/2026 — Validação do instalador documentado no CI
+
+### Alteração na integração contínua
+- Atualizado .github/workflows/php-tests.yml para preparar o banco pelo próprio database/setup.php, em vez de importar schema.sql e seed.sql diretamente com o cliente mysql.
+- O workflow cria um .env temporário no runner com credenciais exclusivas do ambiente de CI; esse arquivo não é versionado e não contém credenciais de produção.
+- Execução [43462038217](https://github.com/arthurgimax/JIF-/actions/runs/43462038217) concluída com sucesso no commit f8fdacfde7ace2ca41b8843b754f065654c19e1b.
+- O log confirma execução do instalador, verificação de sintaxe PHP, conexão/tabelas, autenticação/RBAC e **17 de 17 critérios CA01–CA17 aprovados** com PHP 8.4 e MySQL 8.0.46.
+
+### Revisão humana e limites
+- A integração contínua agora testa o mesmo instalador CLI descrito na seção 15 da spec, aumentando a confiança na reprodução do banco.
+- A execução no CI é Linux/PHP 8.4/MySQL 8.0.46; ainda é recomendável que uma pessoa externa valide o passo a passo em um computador Windows com XAMPP.
+- As pendências do Anexo B permanecem: histórico com valores antigos de demonstração, bloqueio externo de arquivos internos, teste RBAC no servidor publicado e revisão completa de formulários/CSRF/limitação de tentativas.
+
+---
+
 ## [1.0.8-ci] — 13/11/2026 — Aprovação da suíte automatizada CA01–CA17
 
 ### Validação executada
