@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.3 — Publicação e homologação manual)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.4 — Publicação e homologação manual)
 
 ---
 
@@ -12,7 +12,7 @@
 - **Docente Responsável**: Prof. Rafael Pitwak
 - **Estudante Autor**: Arthur Henrique Gimax Oliveira
 - **Repositório Oficial**: [github.com/arthurgimax/JIF-](https://github.com/arthurgimax/JIF-)
-- **Versão do Documento**: 1.0.3 (publicação e homologação manual)
+- **Versão do Documento**: 1.0.4 (publicação e homologação manual)
 - **Data da Revisão**: 13 de novembro de 2026
 
 ---
@@ -503,7 +503,7 @@ Os módulos funcionais estão implementados no código recebido, mas a conformid
 
 O desenvolvimento da plataforma **JIF+** consolidou na prática a aplicação das competências da disciplina de Desenvolvimento de Sistemas no IFRO — Campus Porto Velho Calama. Ao aliar o uso responsável e crítico de ferramentas de inteligência artificial à revisão humana constante, preservou-se a integridade do código, a conformidade rigorosa aos requisitos da especificação original e o respeito integral aos padrões de segurança em desenvolvimento web.
 
-O sistema entrega um ecossistema digital funcional, seguro e visualmente profissional para a gestão das competições esportivas da Rede Federal, eliminando a dependência de processos manuais e garantindo a perpetuação da memória esportiva dos estudantes-atletas do Instituto Federal de Rondônia.
+O sistema entrega um protótipo web operacional para a gestão das competições esportivas da Rede Federal. A homologação em hospedagem real confirmou acesso público, login administrativo e um fluxo de cadastro/consulta; a conformidade de segurança e os critérios restantes continuam sujeitos às verificações pendentes registradas nesta especificação.
 
 ---
 
@@ -527,3 +527,5 @@ O sistema entrega um ecossistema digital funcional, seguro e visualmente profiss
 | **0.5** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Definição da stack tecnológica oficial (PHP 8.2+, MySQL InnoDB, PDO), detalhamento dos requisitos RF01 a RF17, modelagem das 10 tabelas relacionais e estruturação do DER em Mermaid. |
 | **1.0** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Registro original da implementação e dos critérios CA01 a CA17. A alegação de aprovação integral registrada na versão original não foi reexecutada nesta auditoria. |
 | **1.0.2** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Revisão de publicação: correção de cadastro de perfis, desativação de contas seed, schema não destrutivo, instalador CLI, variáveis de ambiente e checklist do Anexo B. Deploy e testes de integração permanecem pendentes.
+| **1.0.3** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Correção da suíte de testes identificada pela integração contínua, com substituição de placeholders PDO duplicados. |
+| **1.0.4** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Publicação manual no InfinityFree; login administrativo e fluxo de cadastro/consulta de atleta confirmados. HTTPS, suíte automatizada completa e revisão do histórico Git permanecem pendentes. |
