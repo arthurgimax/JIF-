@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.6 — HTTPS confirmado e revisão final de publicação)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.7 — instalação local documentada)
 
 ---
 
@@ -438,47 +438,195 @@ A conformidade do sistema foi validada por uma bateria automatizada de testes im
 
 ---
 
-## 15. Implantação e Execução Local
+## 15. Instalação e execução
 
-### 15.1. Execução no Ambiente Local (XAMPP)
-O sistema está plenamente funcional e configurado para execução local no servidor XAMPP (Apache e MySQL):
+Esta seção foi escrita para permitir que uma pessoa que nunca utilizou o JIF+ instale o projeto em outro computador, sem depender de instruções orais do autor.
 
-1. **Pré-requisitos**:
-   - XAMPP instalado com PHP 8.2 ou superior e MySQL 8.0/MariaDB ativo.
-   - Navegador web moderno (Google Chrome, Mozilla Firefox, Microsoft Edge).
-2. **Localização dos Arquivos**:
-   - Diretório de trabalho: `C:\xampp\htdocs\4°Bim - Arthur Gimax - JIF+\`
-3. **Inicialização dos Serviços**:
-   - Abrir o **XAMPP Control Panel** e iniciar os módulos **Apache** e **MySQL**.
-4. **Instalação do Banco de Dados**:
-   - Executar no terminal: `C:\xampp\php\php.exe database/setup.php` (o instalador é bloqueado via navegador).
-   - O script cria o banco `jif_plus`, aplica o schema não destrutivo das 10 tabelas e insere dados de demonstração somente se o banco ainda estiver vazio.
-5. **Acesso à Aplicação**:
-   - URL Principal: `http://localhost/4°Bim - Arthur Gimax - JIF+/`
-   - URL Administrativa: `http://localhost/4°Bim - Arthur Gimax - JIF+/admin/`
+### 15.1. Ambiente, linguagem e dependências
 
-### 15.2. Publicação Externa e Homologação (Fase 6 da Metodologia)
+| Item | Requisito |
+|---|---|
+| Sistema operacional documentado | Windows 10/11, com PowerShell. O desenvolvimento e as instruções originais foram feitos em Windows; macOS/Linux não foram homologados nesta entrega. |
+| Linguagem | PHP 8.2 ou superior. O workflow de integração contínua usa PHP 8.4. |
+| Servidor web local | Apache incluído no XAMPP. Também é possível usar o servidor embutido do PHP para testes locais. |
+| Banco de dados | MySQL 8.0 ou MariaDB compatível com InnoDB. |
+| Extensões PHP obrigatórias | PDO e PDO_MYSQL. |
+| Extensão opcional | PDO_SQLITE, somente para o banco SQLite de contingência usado pelo código em desenvolvimento local. |
+| Ferramentas | Git for Windows, XAMPP e navegador atualizado. |
+| Dependências de projeto | Não há dependências Composer nem pacotes npm. O frontend usa HTML, CSS e JavaScript nativo; a persistência usa PDO, incluído no PHP. |
 
-- **Provedor escolhido:** InfinityFree, para preservar a stack PHP + PDO + MySQL/MariaDB sem reescrever o backend.
-- **Domínio publicado:** `jifplus-ifro.free.nf`.
-- **Diretório remoto:** `/htdocs`; os arquivos PHP, CSS, JavaScript e pastas da aplicação foram enviados diretamente para a raiz pública.
-- **Banco remoto:** MySQL criado no painel do InfinityFree; o phpMyAdmin exibiu as 10 tabelas previstas. As credenciais de conexão foram armazenadas no arquivo `.env` da hospedagem, fora do repositório.
-- **Conta administrativa:** conta própria criada com hash bcrypt; login no painel administrativo foi realizado com sucesso.
-- **Teste de persistência:** um atleta fictício foi cadastrado pelo painel administrativo e apareceu na listagem pública do BID, confirmando escrita e leitura no banco remoto.
-- **Teste de acesso público:** página inicial e listagem de atletas abertas em janela anônima.
-- **HTTPS/TLS:** confirmado pelo responsável em janela anônima em 13/11/2026; o navegador passou a exibir conexão segura. A validação registrada é visual e não substitui monitoramento contínuo do certificado.
-- **Testes automatizados:** a suíte CA01–CA17 permanece pendente de execução integral no ambiente com PDO MySQL. Os testes manuais realizados não autorizam declarar aprovação total.
+Antes de iniciar, confirme no terminal que o PHP do XAMPP está acessível:
 
-#### Decisão sobre Vercel e Supabase
-- **Vercel:** não é destino direto para a aplicação PHP/Apache convencional; exigiria adaptar o backend para funções compatíveis ou reestruturar a aplicação.
-- **Supabase:** oferece PostgreSQL e serviços de backend, mas não executa PHP. A adoção exigiria migrar o esquema MySQL e revisar as consultas PDO.
-- **Decisão desta entrega:** InfinityFree foi escolhido para manter a stack original e cumprir a publicação sem migração de tecnologia. Render com Docker é alternativa possível, mas requer configuração adicional e banco persistente externo.
+~~~powershell
+& "C:\xampp\php\php.exe" -v
+& "C:\xampp\php\php.exe" -m
+~~~
 
-#### Segurança da publicação
-- O repositório atual contém `.gitignore` para excluir `.env` e bancos locais. O `.htaccess` configura bloqueio de acesso direto a arquivos de ambiente e pastas internas; a resposta de bloqueio deve ser testada externamente antes da entrega.
-- A versão atual do seed cria contas de demonstração inativas. O responsável confirmou que desativou os cinco usuários demonstrativos adicionais no banco de produção, preservando sua conta principal. O histórico público antigo ainda contém credenciais fictícias de demonstração e um `SESSION_SECRET` de exemplo; não são credenciais do banco de produção, mas continuam visíveis e exigem reescrita do histórico Git para conformidade integral.
-- Permanecem pendentes: confirmar externamente o bloqueio de `/.env` e `/config/database.php`, testar bloqueio RBAC com usuário sem privilégio, executar a suíte automatizada e revisar integralmente validações administrativas, CSRF e limitação de tentativas de login. A limpeza do histórico Git também permanece pendente.
----
+Na lista de módulos, confirme a presença de PDO e pdo_mysql. Se pdo_mysql não aparecer, habilite a extensão no php.ini utilizado pelo XAMPP e reinicie Apache.
+
+### 15.2. Banco de dados e estrutura das tabelas
+
+- **SGBD:** MySQL 8.0 ou MariaDB compatível, com mecanismo InnoDB.
+- **Nome do banco:** jif_plus.
+- **Script de estrutura:** [database/schema.sql](./database/schema.sql).
+- **Carga inicial:** [database/seed.sql](./database/seed.sql).
+- **Instalador automatizado:** [database/setup.php](./database/setup.php), executado exclusivamente pela linha de comando.
+- **Criação:** o instalador lê as configurações do .env, cria o banco jif_plus se ainda não existir, executa o schema e insere o seed somente quando a tabela usuarios está vazia. O schema usa CREATE TABLE IF NOT EXISTS e não apaga tabelas nem registros existentes.
+
+O banco contém as 10 tabelas abaixo. Todas utilizam id como chave primária auto incremento; os relacionamentos indicados são as chaves estrangeiras definidas no script SQL.
+
+| Tabela | Campos principais | Chave primária | Relacionamentos (FK) |
+|---|---|---|---|
+| usuarios | id, nome, email, senha_hash, perfil, ativo, criado_em | id | Não possui FK. |
+| instituicoes | id, nome, sigla, campus, estado | id | Não possui FK. |
+| competicoes | id, instituicao_organizadora_id, nome, edicao, ano, data_inicio, data_fim, local_sede, status | id | instituicao_organizadora_id → instituicoes.id. |
+| modalidades | id, competicao_id, nome, categoria, tipo, status | id | competicao_id → competicoes.id. |
+| equipes | id, instituicao_id, competicao_id, modalidade_id, responsavel_id, nome | id | instituicao_id → instituicoes.id; competicao_id → competicoes.id; modalidade_id → modalidades.id; responsavel_id → usuarios.id. |
+| atletas | id, usuario_id, instituicao_id, nome, matricula_estudantil, data_nascimento, foto_url, criado_em | id | usuario_id → usuarios.id (opcional); instituicao_id → instituicoes.id. |
+| equipe_atletas | id, equipe_id, atleta_id, numero_camisa, posicao, status_inscricao | id | equipe_id → equipes.id; atleta_id → atletas.id. |
+| partidas | id, competicao_id, modalidade_id, equipe_a_id, equipe_b_id, fase_rodada, data_hora, local_quadra, placar_a, placar_b, situacao | id | competicao_id → competicoes.id; modalidade_id → modalidades.id; equipe_a_id e equipe_b_id → equipes.id. |
+| estatisticas_atletas | id, partida_id, atleta_id, equipe_id, tipo_estatistica, valor | id | partida_id → partidas.id; atleta_id → atletas.id; equipe_id → equipes.id. |
+| estatisticas_equipes | id, partida_id, equipe_id, tipo_estatistica, valor | id | partida_id → partidas.id; equipe_id → equipes.id. |
+
+O dicionário de dados completo, com tipos SQL, nulabilidade, valores padrão e regras de integridade, está na seção **11.1 — Dicionário de Dados** e no arquivo database/schema.sql.
+
+**Dados iniciais:** database/seed.sql contém dados fictícios de demonstração, incluindo instituições/campi, competições, modalidades, equipes, atletas e registros esportivos. Também cria contas técnicas de demonstração com ativo = 0; elas não são contas de acesso. O primeiro administrador deve ser criado conforme a seção 15.5.
+
+**Alternativa manual pelo phpMyAdmin:** se não for possível executar o instalador CLI, crie primeiro o banco jif_plus com codificação utf8mb4_unicode_ci, selecione esse banco, importe database/schema.sql e, em seguida, database/seed.sql. Faça isso somente em banco novo/vazio. Não importe o seed novamente depois de já haver registros, pois ele contém identificadores explícitos.
+
+### 15.3. Variáveis de ambiente
+
+O repositório contém .env.example, que deve ser copiado para .env na raiz do projeto. O arquivo .env é ignorado pelo Git e nunca deve ser enviado ao repositório.
+
+| Variável | Exemplo local | Finalidade |
+|---|---|---|
+| APP_ENV | development | Define o ambiente. Use development localmente. |
+| APP_NAME | JIF+ Gestão e Inteligência Esportiva | Nome de identificação da aplicação. |
+| APP_URL | http://localhost/JIF- | Endereço-base local. Se a pasta do projeto tiver outro nome, ajuste a URL. |
+| DB_HOST | 127.0.0.1 | Host do MySQL local. |
+| DB_PORT | 3306 | Porta do MySQL. |
+| DB_NAME | jif_plus | Nome do banco criado pelo instalador. |
+| DB_USER | root | Usuário MySQL do XAMPP. |
+| DB_PASS | (vazio no XAMPP padrão) | Senha do usuário MySQL. Preencha se o usuário root tiver senha configurada. |
+| DB_CHARSET | utf8mb4 | Codificação utilizada na conexão. |
+
+Para gerar o arquivo local pelo PowerShell, estando na pasta do projeto:
+
+~~~powershell
+Copy-Item .env.example .env
+notepad .env
+~~~
+
+Confira principalmente DB_HOST, DB_PORT, DB_NAME, DB_USER e DB_PASS. Em uma instalação padrão do XAMPP, o usuário é root e a senha costuma ficar vazia; se a instalação tiver senha diferente, use a senha configurada no MySQL local.
+
+### 15.4. Passo a passo de instalação e execução
+
+1. **Instalar as ferramentas.** Instale Git for Windows e XAMPP com PHP 8.2 ou superior e MySQL/MariaDB. Durante a instalação do XAMPP, mantenha Apache e MySQL selecionados.
+2. **Clonar o repositório.** Abra o PowerShell e execute:
+   ~~~powershell
+   Set-Location C:\xampp\htdocs
+   git clone https://github.com/arthurgimax/JIF-.git
+   Set-Location .\JIF-
+   ~~~
+3. **Criar a configuração local.** Execute Copy-Item .env.example .env e abra .env com notepad .env. Preencha os dados de conexão do MySQL local conforme a seção 15.3.
+4. **Iniciar os serviços.** Abra o XAMPP Control Panel e clique em **Start** para Apache e MySQL. Ambos devem aparecer em execução.
+5. **Criar o banco e as tabelas.** No PowerShell, confirme que o diretório atual é C:\xampp\htdocs\JIF- e execute:
+   ~~~powershell
+   & "C:\xampp\php\php.exe" .\database\setup.php
+   ~~~
+   O terminal deve informar que a conexão foi estabelecida, que o banco jif_plus está pronto e que a estrutura das 10 tabelas foi criada/verificada. Se aparecer erro de conexão, confira se MySQL está iniciado e se os dados do .env estão corretos.
+6. **Criar o primeiro administrador.** Siga a seção 15.5. O seed não fornece uma conta administrativa ativa nem uma senha padrão.
+7. **Abrir o sistema.** No navegador, acesse http://localhost/JIF-/. A tela de login fica em http://localhost/JIF-/login.php; o painel administrativo fica em http://localhost/JIF-/admin/.
+8. **Se a pasta tiver outro nome.** Ajuste o caminho da URL para o nome da pasta dentro de C:\xampp\htdocs e atualize APP_URL no .env.
+
+Não é necessário executar composer install ou npm install: o projeto não possui dependências Composer/npm.
+
+### 15.5. Criação do primeiro administrador de teste
+
+As contas técnicas inseridas pelo seed são inativas. Para testar o login administrativo em uma instalação nova, crie uma conta própria de demonstração com uma senha exclusiva para o ambiente local. Não reutilize senha pessoal ou de outros serviços.
+
+1. Abra o PowerShell e execute o bloco abaixo. Ele solicita a senha sem exibi-la e gera somente o hash bcrypt:
+
+   ~~~powershell
+   $script = Join-Path $env:TEMP 'jif-hash.php'
+   @'
+   <?php
+   echo password_hash(getenv('JIF_ADMIN_PASSWORD'), PASSWORD_DEFAULT), PHP_EOL;
+   '@ | Set-Content -Path $script -Encoding ASCII
+
+   $senha = Read-Host "Digite uma senha de teste para o administrador" -AsSecureString
+   $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($senha)
+   try {
+       $env:JIF_ADMIN_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
+       & "C:\xampp\php\php.exe" $script
+   }
+   finally {
+       Remove-Item Env:JIF_ADMIN_PASSWORD -ErrorAction SilentlyContinue
+       [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+       Remove-Item $script -ErrorAction SilentlyContinue
+   }
+   ~~~
+
+2. Copie o hash gerado. Abra http://localhost/phpmyadmin, selecione o banco jif_plus, abra a aba **SQL** e execute o comando abaixo, substituindo HASH_BCRYPT_GERADO pelo hash e usando o e-mail fictício indicado:
+
+   ~~~sql
+   INSERT INTO usuarios (nome, email, senha_hash, perfil, ativo)
+   VALUES ('Administrador de Teste', 'admin.local@example.test',
+           'HASH_BCRYPT_GERADO', 'admin', 1);
+   ~~~
+
+3. Acesse http://localhost/JIF-/login.php e entre com o e-mail admin.local@example.test e a senha de teste que você digitou no PowerShell. O e-mail .example.test é reservado para documentação/testes e não recebe mensagens.
+
+Execute o INSERT somente uma vez por banco. Se a conta já existir, não repita o comando; use outro e-mail fictício ou mantenha a conta existente.
+
+### 15.6. Como testar o funcionamento
+
+**Testes automatizados (PowerShell, na raiz do repositório):**
+
+~~~powershell
+& "C:\xampp\php\php.exe" .\tests\test_db_connection.php
+& "C:\xampp\php\php.exe" .\tests\test_auth.php
+& "C:\xampp\php\php.exe" .\tests\test_full_suite.php
+~~~
+
+Os testes dependem de um banco configurado e das extensões PDO correspondentes. A suíte test_full_suite.php cobre os critérios CA01 a CA17. Registre a saída real; a existência dos arquivos de teste não significa que todos foram aprovados.
+
+**Roteiro manual do fluxo principal:**
+
+1. Entre com o administrador criado na seção 15.5.
+2. Acesse o painel administrativo.
+3. Abra a gestão de atletas e cadastre um atleta fictício, selecionando uma instituição/campus existente no seed.
+4. Salve o cadastro e confirme que o registro aparece na listagem administrativa.
+5. Abra a área pública **Atletas / BID** (http://localhost/JIF-/atletas.php) e pesquise o atleta cadastrado.
+6. Consulte também competições, modalidades, equipes, partidas e classificação para verificar os dados iniciais.
+
+Esse roteiro exercita autenticação, gravação de cadastro e consulta posterior dos dados no banco.
+
+### 15.7. Publicação externa e homologação
+
+- **Provedor:** InfinityFree, mantendo a stack PHP + PDO + MySQL/MariaDB.
+- **Endereço publicado:** [https://jifplus-ifro.free.nf](https://jifplus-ifro.free.nf).
+- **Diretório remoto:** /htdocs.
+- **Banco remoto:** MySQL criado no painel do provedor; as 10 tabelas foram visualizadas no phpMyAdmin.
+- **Configuração remota:** as credenciais são mantidas no .env da hospedagem, fora do repositório.
+- **Fluxos manuais informados e conferidos pelo responsável:** abertura da página inicial em janela anônima, login administrativo e cadastro de atleta fictício seguido de consulta na listagem pública do BID.
+- **HTTPS:** o responsável confirmou visualmente a conexão segura em janela anônima em 13/11/2026. Isso não representa monitoramento contínuo do certificado.
+- **Compartilhamento GitHub:** em 13/11/2026, a consulta de permissões do repositório retornou write para o usuário rafaelpitwak.
+
+### 15.8. Decisão sobre Vercel e Supabase
+
+- **Vercel:** não executa diretamente esta aplicação PHP/Apache convencional como um projeto estático ou Next.js. Seria necessário adaptar o backend para funções compatíveis ou reestruturar a aplicação.
+- **Supabase:** oferece PostgreSQL e serviços de backend, mas não hospeda o backend PHP. A adoção exigiria migrar o esquema MySQL e revisar as consultas PDO.
+- **Decisão desta entrega:** InfinityFree foi mantido para preservar PHP + MySQL e evitar uma migração de tecnologia desnecessária. Render com Docker é uma alternativa técnica, mas exigiria configuração adicional e banco persistente externo.
+
+### 15.9. Limitações conhecidas e verificações pendentes
+
+- O checklist em [tests/test_checklist.md](./tests/test_checklist.md) é a referência do estado de segurança. Não se declara aprovação integral sem executar os testes.
+- A suíte automatizada CA01–CA17 precisa ser executada em ambiente com PDO MySQL e seu resultado real registrado.
+- Ainda precisam de evidência final: teste de bloqueio de rotas administrativas com usuário sem privilégio, teste externo de bloqueio de /.env e /config/database.php, revisão integral das validações dos formulários, proteção CSRF e limitação de tentativas de login.
+- O histórico Git público contém valores antigos de demonstração e um segredo estático de exemplo em commits anteriores. As contas atuais do seed são inativas e as credenciais do banco de produção não estão no .env.example atual; contudo, os valores históricos continuam visíveis e a limpeza do histórico permanece pendente. Não reutilize esses valores em produção.
+- O sistema foi desenvolvido e documentado para Windows/XAMPP. A execução em macOS/Linux não foi homologada nesta entrega.
+
 
 ## 16. Limitações Conhecidas e Melhorias Futuras
 
@@ -516,6 +664,7 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 - **Vercel/Supabase:** não utilizados. Vercel não executa diretamente esta aplicação PHP/Apache; Supabase não hospeda PHP e exigiria migração MySQL para PostgreSQL.
 - **Testes automatizados:** suíte CA01–CA17 presente no repositório, mas ainda não executada integralmente nesta homologação. Não há declaração de aprovação total.
 - **HTTPS:** confirmado pelo responsável em janela anônima; o navegador exibe conexão segura. Registro baseado na confirmação visual do responsável em 13/11/2026.
+- **Colaborador do GitHub:** a consulta de permissões em 13/11/2026 retornou write para rafaelpitwak.
 - **Segurança do arquivo de ambiente:** `.env` é ignorado pelo Git e o `.htaccess` contém regras de bloqueio, mas o bloqueio externo deve ser confirmado com teste de acesso direto.
 - **Contas demonstrativas em produção:** o responsável confirmou que desativou os cinco usuários adicionais de demonstração pelo painel administrativo, preservando a conta principal e sem excluir registros.
 - **Histórico Git:** o repositório público contém commits anteriores desde outubro de 2026, mas um commit inicial ainda expõe credenciais de demonstração e um `SESSION_SECRET` estático de exemplo. A desativação no banco de produção não remove esses dados do histórico; permanece necessária a limpeza do histórico ou a restrição do repositório com acesso liberado ao professor.
@@ -532,3 +681,4 @@ O sistema entrega um protótipo web operacional para a gestão das competições
 | **1.0.4** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Publicação manual no InfinityFree; login administrativo e fluxo de cadastro/consulta de atleta confirmados. HTTPS, suíte automatizada completa e revisão do histórico Git permanecem pendentes. |
 | **1.0.5** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Registro da desativação dos cinco usuários demonstrativos em produção, preservando a conta administrativa principal. |
 | **1.0.6** | 13/11/2026 | Arthur Henrique Gimax Oliveira | HTTPS confirmado visualmente em janela anônima pelo responsável; documentação e checklist atualizados. A limpeza das credenciais fictícias no histórico Git e a execução da suíte automatizada permanecem pendentes. |
+| **1.0.7** | 13/11/2026 | Arthur Henrique Gimax Oliveira | Guia reproduzível de instalação e execução local adicionado com ambiente, dependências, variáveis de ambiente, criação do banco, dicionário resumido das 10 tabelas, primeiro administrador de teste e roteiro de validação. Permissão write de rafaelpitwak confirmada no repositório. Testes automatizados e pendências de segurança continuam registrados sem declaração de aprovação integral. |
