@@ -99,10 +99,29 @@ Registro histórico de decisões arquiteturais, alterações, revisões humanas 
 - `php -l` aprovado em 29 arquivos PHP.
 - Schema SQLite de contingência e seed executados em teste isolado com Python SQLite: 10 tabelas criadas e dados fictícios carregados; todas as contas seed inativas.
 - Testes de integração PHP dependem de `pdo_mysql` ou `pdo_sqlite`; o ambiente de auditoria atual não possui esses drivers, então não podem ser declarados aprovados aqui.
-- Risco identificado na referência remota `origin/main`: um commit antigo ainda rastreia `jif_plus.sqlite` com contas ativas e matrículas. O arquivo foi removido da versão local atual, mas a sincronização e eventual limpeza do histórico remoto permanecem pendentes.
+- Revisão posterior do histórico público identificou credenciais de demonstração no commit inicial (senhas de teste associadas às contas seed) e um `SESSION_SECRET` estático de exemplo em `.env.example`. O seed atual usa contas `example.test` inativas e a suíte atual gera credenciais aleatórias, mas os registros antigos continuam acessíveis no histórico. A inativação das contas seed na base de produção e a decisão de limpar o histórico ou restringir o repositório com acesso do professor permanecem pendentes.
 
 ## [1.0.3-tests] — 13/11/2026 — Correção identificada pela integração contínua
 
 - **Falha detectada pelo GitHub Actions:** a suíte de aceite CA13 reutilizava o mesmo placeholder nomeado `:id` duas vezes na consulta PDO, incompatível com prepared statements nativos do MySQL.
 - **Correção:** substituídos por `:equipe_a_id` e `:equipe_b_id`, ambos vinculados ao identificador da equipe testada.
 - **Validação:** a correção foi enviada ao repositório; a nova execução do workflow ainda precisa concluir para confirmar a suíte completa.
+
+
+## [1.0.4-deploy] — 13/11/2026 — Publicação e homologação manual no InfinityFree
+
+### Implantação executada
+- **Hospedagem escolhida:** InfinityFree, preservando a aplicação PHP tradicional com PDO e MySQL/MariaDB. A migração para Vercel/Next.js ou Supabase/PostgreSQL foi descartada nesta entrega por exigir adaptação de arquitetura e/ou migração do banco.
+- **Domínio publicado:** `jifplus-ifro.free.nf`; os arquivos da aplicação foram enviados para a raiz `/htdocs`.
+- **Banco remoto:** banco MySQL criado no provedor; o phpMyAdmin exibiu as 10 tabelas previstas. As credenciais foram configuradas no arquivo `.env` do servidor, não no repositório.
+- **Administrador:** conta própria criada com hash bcrypt e login administrativo realizado com sucesso no ambiente publicado.
+- **Fluxo manual de persistência:** um atleta fictício de teste foi cadastrado no painel administrativo e apareceu na listagem pública do BID. Isso confirma uma operação de escrita e uma consulta subsequente no banco remoto.
+- **Acesso público:** a página inicial e a página de atletas foram abertas em janela anônima.
+
+### Revisões humanas e limites da homologação
+- A decisão de manter PHP + MySQL foi mantida após comparar a stack real com as opções da atividade: Vercel não executa diretamente a aplicação PHP/Apache convencional; Supabase oferece PostgreSQL e não hospeda PHP, portanto exigiria migração. InfinityFree foi escolhido para preservar a stack existente.
+- A captura do navegador exibiu o indicador **“Não seguro”**. Portanto, embora o domínio esteja acessível, o certificado TLS/HTTPS ainda não foi validado e não deve ser declarado conforme até a correção e novo teste.
+- A suíte automatizada completa de 17 critérios não foi executada na hospedagem; a validação acima é manual e cobre apenas os fluxos descritos.
+- O arquivo `.htaccess` contém regras para negar acesso direto ao `.env` e às pastas internas, mas a resposta HTTP de bloqueio ainda precisa ser verificada externamente.
+- O histórico público contém credenciais antigas de demonstração e um segredo estático de exemplo. As contas seed da versão atual estão inativas; ainda é necessário confirmar o estado das contas seed no banco de produção e decidir sobre a limpeza do histórico antes da entrega definitiva.
+- A proteção CSRF, a limitação de tentativas de login e a validação completa de todos os campos administrativos permanecem como melhorias pendentes, conforme o checklist de segurança.
