@@ -1,299 +1,506 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0 Final)
 
-## 1. Objetivo
-O JIF+ é uma plataforma web criada para centralizar as informações esportivas das competições dos Institutos Federais, unificando dados de instituições, competições, modalidades, equipes, atletas, partidas, resultados e estatísticas em um único ambiente digital. O sistema resolve o problema da fragmentação de dados esportivos dispersos em boletins, documentos em PDF e páginas isoladas, eliminando o retrabalho dos organizadores e viabilizando a consulta ágil do histórico e do desempenho de equipes e atletas. A plataforma atende a estudantes-atletas, treinadores, professores de Educação Física, coordenadores de eventos esportivos e à comunidade acadêmica em geral.
+---
 
-## 2. Usuários
-- **Administrador Geral**: responsável pelo gerenciamento de usuários e permissões do sistema, cadastro de instituições/campi participantes, auditoria geral de registros e manutenção global da plataforma.
-- **Coordenador / Organizador de Competição**: responsável por criar e gerenciar competições e modalidades, homologar equipes e atletas, programar partidas, registrar súmulas com placares e estatísticas de jogos e publicar classificações oficiais.
-- **Treinador / Professor Responsável**: responsável por inscrever e gerenciar as equipes do seu campus em uma competição, cadastrar/vincular atletas do seu instituto às equipes e acompanhar estatísticas de desempenho dos seus jogos.
-- **Estudante-Atleta**: usuário com acesso à sua conta pessoal para visualizar seu perfil esportivo (identidade/BID estudantil com histórico de jogos, equipes integradas e pontuações/gols), além de consultar tabelas de partidas e resultados.
-- **Visitante / Público Geral (Não autenticado)**: consulta informações públicas sobre competições, tabela de jogos, resultados em tempo real, pontuações, perfis esportivos públicos de atletas e equipes e painéis de estatísticas, sem permissão para criar, editar ou excluir dados.
+### Identificação do Projeto
 
-## 3. Casos de uso principais
-- **UC01 — Cadastrar-se e autenticar-se no sistema**: permitir que novos usuários criem conta e que usuários cadastrados façam login com validação de credenciais ou encerrem a sessão (logout).
-- **UC02 — Gerenciar usuários e perfis de acesso**: permitir ao administrador listar, ativar, inativar e atribuir perfis de acesso (Administrador, Organizador, Treinador, Atleta) aos usuários.
-- **UC03 — Gerenciar instituições e campi**: permitir ao administrador cadastrar, editar, listar e desativar dados dos Institutos Federais e seus respectivos campi participantes.
-- **UC04 — Gerenciar competições e modalidades**: permitir ao organizador criar e configurar competições (edição, ano, datas, local) e associar as modalidades esportivas correspondentes.
-- **UC05 — Gerenciar equipes**: permitir a treinadores ou organizadores cadastrar equipes, vinculando-as a uma instituição, uma competição específica e uma modalidade.
-- **UC06 — Gerenciar atletas e perfil esportivo**: permitir o cadastro de atletas, vinculação dos atletas às equipes e manutenção da identidade/histórico esportivo individual.
-- **UC07 — Agendar e programar partidas**: permitir ao organizador cadastrar jogos esportivos informando competição, modalidade, equipes adversárias, data, horário e local da partida.
-- **UC08 — Registrar resultados e estatísticas de partidas**: permitir ao organizador registrar e homologar placares finais, parciais e estatísticas individuais (gols, pontos, faltas, cartões) e coletivas de cada jogo.
-- **UC09 — Consultar página da equipe e histórico**: permitir a qualquer usuário consultar os integrantes de uma equipe, jogos disputados, vitórias/derrotas e histórico de desempenho.
-- **UC10 — Pesquisar e filtrar informações esportivas**: permitir a todos os usuários realizar buscas textuais e aplicar filtros combinados por instituição, modalidade, atleta, equipe, data e competição.
-- **UC11 — Visualizar painéis de inteligência e desempenho**: permitir a consulta de resumos estatísticos, classificação de grupos e indicadores consolidados de atletas e equipes.
-- **UC12 — Validar e persistir fluxo de negócio esportivo**: garantir que toda entrada de dados passe por validações de regras de negócio no servidor e persista de forma íntegra no banco de dados relacional.
+- **Nome do Projeto**: JIF+ (Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais)
+- **Instituição de Ensino**: Instituto Federal de Educação, Ciência e Tecnologia de Rondônia (IFRO) — Campus Porto Velho Calama
+- **Curso**: Técnico em Informática Integrado ao Ensino Médio (3º Ano)
+- **Disciplina**: Desenvolvimento de Sistemas (4º Bimestre)
+- **Docente Responsável**: Prof. Rafael Pitwak
+- **Estudante Autor**: Arthur Henrique Gimax Oliveira
+- **Repositório Oficial**: [github.com/arthurgimax/JIF-](https://github.com/arthurgimax/JIF-)
+- **Versão do Documento**: 1.0 Final (Consolidada e Homologada)
+- **Data de Homologação**: Novembro de 2026
 
-## 4. Requisitos funcionais
-- **RF01 [UC01] — Cadastro de usuário**: o sistema deve permitir o autocadastro de novos usuários mediante fornecimento de nome completo, e-mail institucional/pessoal válido e senha de acesso.
-- **RF02 [UC01] — Login e controle de sessão**: o sistema deve autenticar usuários existentes com base em e-mail e senha, iniciando uma sessão segura, e oferecer opção de encerramento da sessão (logout).
-- **RF03 [UC02] — Controle de perfis e permissões**: o sistema deve restringir o acesso a telas e operações conforme o perfil do usuário (Administrador, Organizador, Treinador, Atleta e Visitante), bloqueando ações não autorizadas.
-- **RF04 [UC03] — Gestão de instituições**: o sistema deve permitir cadastrar, listar, atualizar e desativar instituições e seus campi (nome, sigla, campus, UF).
-- **RF05 [UC04] — Gestão de competições**: o sistema deve permitir criar, listar, atualizar e encerrar competições esportivas (nome, edição, período de realização, local sede e status).
-- **RF06 [UC04] — Gestão de modalidades**: o sistema deve permitir cadastrar modalidades esportivas vinculadas a uma competição, indicando categoria (masculino, feminino, misto) e formato (coletiva ou individual).
-- **RF07 [UC05] — Gestão de equipes**: o sistema deve permitir cadastrar equipes vinculadas obrigatoriamente a uma instituição, uma competição e uma modalidade válida, associando um treinador responsável.
-- **RF08 [UC06] — Cadastro e vínculo de atletas**: o sistema deve permitir cadastrar atletas e associá-los a uma ou mais equipes participantes da competição, registrando número da camisa e posição.
-- **RF09 [UC06] — Perfil esportivo do atleta**: o sistema deve exibir uma página de perfil individual para cada atleta, contendo seus dados esportivos, equipes vinculadas, histórico de partidas disputadas e totalizadores estatísticos.
-- **RF10 [UC07] — Programação de partidas**: o sistema deve permitir agendar partidas definindo competição, modalidade, duas equipes participantes da mesma modalidade/competição, data, horário, local e fase do torneio.
-- **RF11 [UC08] — Registro de placares e resultados**: o sistema deve permitir ao organizador lançar e atualizar o placar final e a situação da partida (Agendada, Em Andamento, Encerrada ou Cancelada).
-- **RF12 [UC08] — Registro de estatísticas esportivas**: o sistema deve permitir o lançamento de eventos e estatísticas individuais (ex.: pontos, gols, cartões, faltas) associados a um atleta e a uma partida específica.
-- **RF13 [UC09] — Visualização de página de equipe**: o sistema deve disponibilizar uma página dedicada para cada equipe com sua relação de atletas, comissão técnica, partidas agendadas e histórico de resultados.
-- **RF14 [UC10] — Mecanismo de busca e filtros**: o sistema deve permitir pesquisar textualmente e filtrar atletas, equipes, partidas e resultados por instituição, modalidade, ano e competição.
-- **RF15 [UC11] — Painéis analíticos e relatórios de desempenho**: o sistema deve apresentar painéis visuais com resumos de desempenho, tabelas de classificação por pontos e destaques esportivos calculados a partir dos dados gravados.
-- **RF16 [UC12] — Validação de regras de negócio**: o sistema deve validar no servidor a consistência dos dados, impedindo partidas entre equipes de modalidades distintas, duplicidade de inscrição de atletas em equipes conflitantes e campos obrigatórios em branco.
-- **RF17 [UC12] — Persistência relacional de dados**: o sistema deve gravar todas as entidades e seus relacionamentos em banco de dados relacional, mantendo a integridade referencial para consultas futuras.
+---
 
-## 5. Requisitos não funcionais
-- **RNF01 — Segurança no armazenamento de senhas**: as senhas dos usuários nunca devem ser armazenadas em texto puro; devem ser obrigatoriamente protegidas por funções de dispersão criptográfica (hash) robustas e seguras no backend (ex.: `password_hash()` com algoritmo `bcrypt` ou `Argon2id`).
-- **RNF02 — Validação obrigatória no servidor**: todo e qualquer dado recebido de formulários deve ser rigorosamente validado e sanitizado no servidor antes de ser processado ou salvo, garantindo integridade mesmo que a validação de cliente em JavaScript seja burlada ou desativada.
-- **RNF03 — Proteção contra injeção de SQL (SQL Injection)**: todas as consultas ao banco de dados devem utilizar exclusivamente consultas preparadas (prepared statements com PDO / MySQLi) e passagem de parâmetros vinculados, sendo terminantemente vedada a concatenação direta de dados de usuários em strings SQL.
-- **RNF04 — Isolamento de credenciais e segredos**: nenhuma credencial de acesso ao banco de dados, chave secreta de sessão ou token de API pode constar em texto puro no código versionado; tais dados devem residir em variáveis de ambiente (`.env` listado no `.gitignore` local e configurado no painel da hospedagem).
-- **RNF05 — Controle de acesso às rotas**: o sistema deve verificar a sessão ativa e o nível de privilégio no backend para cada rota protegida, impedindo que usuários sem autorização acessem páginas administrativas por manipulação manual da URL.
-- **RNF06 — Privacidade e conformidade com dados pessoais**: o sistema deve coletar apenas os dados estritamente necessários ao funcionamento esportivo e restringir a exibição de dados pessoais e contatos privados dos estudantes-atletas ao público geral.
-- **RNF07 — Tratamento de erros e segurança da informação**: o sistema não deve expor mensagens de erro nativas do banco de dados, nomes de tabelas ou stack traces ao usuário em tela; mensagens amigáveis devem ser exibidas ao cliente e detalhes técnicos gravados apenas em logs internos do servidor.
-- **RNF08 — Comunicação segura (HTTPS)**: o sistema publicado em ambiente de produção deve operar obrigatoriamente sob o protocolo HTTPS com certificado TLS válido.
-- **RNF09 — Tempo de resposta e desempenho**: as páginas de consulta pública, perfis e tabelas devem apresentar tempo de resposta de carregamento inferior a 3 segundos em condições normais de conexão com a internet.
-- **RNF10 — Design responsivo e compatibilidade**: a interface web deve ser responsiva, adaptando-se confortavelmente a diferentes resoluções de tela, desde smartphones até monitores desktop, utilizando padrões modernos de HTML5 e CSS3.
-- **RNF11 — Integridade e consistência relacional**: o esquema do banco de dados deve utilizar o mecanismo de armazenamento InnoDB no MySQL com restrições explícitas de chave estrangeira (`FOREIGN KEY`) e integridade referencial para evitar registros órfãos.
+## 1. Introdução e Contextualização
 
-## 6. Modelo de dados (DER simples)
+Os Jogos dos Institutos Federais (JIF) constituem o maior evento poliesportivo da Rede Federal de Educação Profissional, Científica e Tecnológica do Brasil. Reunindo milhares de estudantes-atletas em etapas locais (como os Jogos Intercampi do IFRO — JIFRO), regionais (JIF Norte) e na etapa nacional consolidada, essas competições fomentam a integração comunitária, a cidadania, o espírito esportivo e o desenvolvimento socioemocional dos jovens.
 
-### Tabelas e Estrutura de Campos
-1. **`usuarios`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador único do usuário.
-   - `nome` (VARCHAR(150), NOT NULL): nome completo do usuário.
-   - `email` (VARCHAR(150), NOT NULL, UNIQUE): endereço de e-mail institucional/pessoal.
-   - `senha_hash` (VARCHAR(255), NOT NULL): hash criptográfico da senha do usuário.
-   - `perfil` (ENUM('admin', 'organizador', 'treinador', 'atleta'), NOT NULL): nível de acesso.
-   - `ativo` (TINYINT(1), NOT NULL, DEFAULT 1): status de ativação da conta.
-   - `criado_em` (DATETIME, NOT NULL, DEFAULT CURRENT_TIMESTAMP): data de cadastro.
+Apesar de sua relevância institucional e desportiva, os processos de gestão, registro e comunicação dos eventos esportivos historicamente carecem de centralização tecnológica. Na rotina dos jogos, as informações de delegações, equipes, atletas, tabelas de confrontos e súmulas são frequentemente fragmentadas em planilhas locais, arquivos de texto avulsos, impressões em papel e boletins informativos distribuídos em formato PDF através de aplicativos de mensagens instantâneas.
 
-2. **`instituicoes`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador da instituição.
-   - `nome` (VARCHAR(150), NOT NULL): nome da instituição (ex.: IFRO).
-   - `sigla` (VARCHAR(30), NOT NULL): sigla oficial.
-   - `campus` (VARCHAR(100), NOT NULL): campus da instituição (ex.: Porto Velho Calama).
-   - `estado` (CHAR(2), NOT NULL): sigla do estado (ex.: RO).
+O **JIF+** nasce no âmbito acadêmico do IFRO — Campus Porto Velho Calama como uma solução web robusta, segura e moderna para unificar todo o ciclo de vida informacional dos jogos em uma única plataforma digital. O sistema conecta coordenadores de eventos, docentes de Educação Física, técnicos desportivos, estudantes-atletas e a comunidade acadêmica em geral, garantindo transparência, integridade referencial dos dados e agilidade nas tomadas de decisão esportiva.
 
-3. **`competicoes`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador da competição.
-   - `instituicao_organizadora_id` (INT, NOT NULL, FK): instituição anfitriã.
-   - `nome` (VARCHAR(150), NOT NULL): título do torneio (ex.: JIFRO, JIF Norte).
-   - `edicao` (VARCHAR(50), NOT NULL): número ou identificador da edição.
-   - `ano` (INT, NOT NULL): ano de realização.
-   - `data_inicio` (DATE, NOT NULL): data de abertura.
-   - `data_fim` (DATE, NOT NULL): data de encerramento.
-   - `local_sede` (VARCHAR(150), NOT NULL): cidade/local sede.
-   - `status` (ENUM('planejada', 'em_andamento', 'encerrada'), NOT NULL, DEFAULT 'planejada').
+---
 
-4. **`modalidades`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador da modalidade.
-   - `competicao_id` (INT, NOT NULL, FK): competição à qual a modalidade pertence.
-   - `nome` (VARCHAR(100), NOT NULL): nome do esporte (ex.: Futsal, Voleibol, Atletismo).
-   - `categoria` (ENUM('masculino', 'feminino', 'misto'), NOT NULL): categoria disputada.
-   - `tipo` (ENUM('coletiva', 'individual'), NOT NULL): formato da modalidade.
-   - `status` (ENUM('ativa', 'inativa'), NOT NULL, DEFAULT 'ativa').
+## 2. Problema Identificado
 
-5. **`equipes`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador da equipe.
-   - `instituicao_id` (INT, NOT NULL, FK): campus/instituição representada.
-   - `competicao_id` (INT, NOT NULL, FK): competição que disputa.
-   - `modalidade_id` (INT, NOT NULL, FK): modalidade específica.
-   - `responsavel_id` (INT, NOT NULL, FK): treinador/professor vinculado ao time (`usuarios.id`).
-   - `nome` (VARCHAR(150), NOT NULL): nome de exibição da equipe.
+Durante a auditoria de processos operacionais dos jogos escolares e intercampi, identificaram-se os seguintes gargalos estruturais:
 
-6. **`atletas`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador do atleta.
-   - `usuario_id` (INT, NULL, FK): vínculo opcional com a conta de usuário (`usuarios.id`).
-   - `instituicao_id` (INT, NOT NULL, FK): campus ao qual o atleta pertence.
-   - `nome` (VARCHAR(150), NOT NULL): nome completo do atleta.
-   - `matricula_estudantil` (VARCHAR(50), NOT NULL): matrícula do estudante.
-   - `data_nascimento` (DATE, NULL): data de nascimento.
-   - `foto_url` (VARCHAR(255), NULL): URL ou caminho da foto para o BID/perfil.
-   - `criado_em` (DATETIME, NOT NULL, DEFAULT CURRENT_TIMESTAMP).
+1. **Fragmentação e Dispersão de Dados**: Publicação de boletins em arquivos PDF desarticulados, o que dificulta buscas históricas e a consulta instantânea por parte de estudantes e familiares.
+2. **Lentidão e Falhas no Cálculo Manual**: A apuração manual de tabelas de classificação, saldo de gols, critérios de desempate e estatísticas individuais (artilharia e disciplina) demanda tempo excessivo e gera margem para divergências entre comissões técnicas.
+3. **Perda da Memória Esportiva e Inexistência de BID**: A ausência de um Boletim Informativo Diário (BID) e de um repositório centralizado impede a preservação da trajetória e do histórico esportivo dos estudantes-atletas ao longo dos anos de permanência no Instituto Federal.
+4. **Falta de Transparência e Acompanhamento em Tempo Real**: Estudantes, servidores e familiares que acompanham os jogos à distância não dispõem de um ambiente centralizado para consultar confrontos agendados, placares homologados e classificações atualizadas.
+5. **Vulnerabilidade e Insegurança em Ambientes de Controle**: Ausência de controle de permissões por nível de usuário (RBAC) em processos manuais, permitindo inconsistências de inscrições e alterações indevidas em súmulas.
 
-7. **`equipe_atletas`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador do vínculo de inscrição.
-   - `equipe_id` (INT, NOT NULL, FK): equipe participante.
-   - `atleta_id` (INT, NOT NULL, FK): atleta inscrito.
-   - `numero_camisa` (INT, NULL): dorsal ou número do atleta na equipe.
-   - `posicao` (VARCHAR(50), NULL): posição ou especialidade esportiva.
-   - `status_inscricao` (ENUM('regular', 'suspenso', 'inativo'), NOT NULL, DEFAULT 'regular').
+---
 
-8. **`partidas`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador da partida.
-   - `competicao_id` (INT, NOT NULL, FK): competição da disputa.
-   - `modalidade_id` (INT, NOT NULL, FK): modalidade disputada.
-   - `equipe_a_id` (INT, NOT NULL, FK): primeira equipe participante.
-   - `equipe_b_id` (INT, NOT NULL, FK): segunda equipe participante.
-   - `fase_rodada` (VARCHAR(50), NOT NULL): fase da competição (ex.: Fase de Grupos, Semifinal, Final).
-   - `data_hora` (DATETIME, NOT NULL): data e horário agendados.
-   - `local_quadra` (VARCHAR(150), NOT NULL): local da disputa (ex.: Ginásio Poliesportivo Calama).
-   - `placar_a` (INT, NULL, DEFAULT NULL): pontuação final da equipe A.
-   - `placar_b` (INT, NULL, DEFAULT NULL): pontuação final da equipe B.
-   - `situacao` (ENUM('agendada', 'em_andamento', 'encerrada', 'cancelada'), NOT NULL, DEFAULT 'agendada').
+## 3. Objetivo Geral e Objetivos Específicos
 
-9. **`estatisticas_atletas`**
-   - `id` (INT, PK, AUTO_INCREMENT): identificador do registro estatístico.
-   - `partida_id` (INT, NOT NULL, FK): partida onde o evento ocorreu.
-   - `atleta_id` (INT, NOT NULL, FK): atleta responsável pela estatística.
-   - `equipe_id` (INT, NOT NULL, FK): equipe do atleta na partida.
-   - `tipo_estatistica` (VARCHAR(50), NOT NULL): tipo do evento (ex.: gol, ponto, falta, cartao_amarelo, cartao_vermelho, assistencia).
-   - `valor` (INT, NOT NULL, DEFAULT 1): quantidade ou valor computado.
+### 3.1. Objetivo Geral
+Desenvolver e implantar a plataforma web **JIF+**, centralizando a gestão de instituições, competições, modalidades, equipes, atletas, partidas, súmulas e classificações, além de disponibilizar módulos de inteligência e estatística esportiva orientados à Rede Federal de Educação Profissional e Tecnológica.
 
-10. **`estatisticas_equipes`**
-    - `id` (INT, PK, AUTO_INCREMENT): identificador da estatística da equipe.
-    - `partida_id` (INT, NOT NULL, FK): partida associada.
-    - `equipe_id` (INT, NOT NULL, FK): equipe associada.
-    - `tipo_estatistica` (VARCHAR(50), NOT NULL): indicador coletivo (ex.: pontos_total, faltas_coletivas, sets_vencidos).
-    - `valor` (INT, NOT NULL): pontuação ou métrica registrada.
+### 3.2. Objetivos Específicos
+- **Modelar e estruturar** um banco de dados relacional íntegro, composto por 10 entidades mapeadas, assegurando integridade referencial estrita (`FOREIGN KEY`) e suporte a transações ACID.
+- **Implementar controle de acesso baseado em papéis (RBAC)**, distinguindo os privilégios operacionais de Administradores, Organizadores, Treinadores, Atletas e Visitantes.
+- **Construir súmula eletrônica interativa** capaz de homologar placares e vincular eventos individuais (gols, pontos, faltas e cartões) diretamente aos atletas participantes.
+- **Automatizar a computação de tabelas de classificação**, aplicando pontuação oficial (3 pontos por vitória, 1 por empate) e critérios desportivos de desempate (saldo de gols, gols pró e confrontos).
+- **Consolidar o Boletim Informativo do Atleta (BID)**, fornecendo perfil individual detalhado com foto, dorsal, posição, histórico de jogos disputados e métricas acumuladas.
+- **Disponibilizar painéis analíticos de inteligência esportiva**, incluindo ranking de artilharia (Chuteira de Ouro), eficiência ofensiva por campus e Troféu Fair Play (indicador disciplinar).
+- **Garantir estrita conformidade com as boas práticas de segurança** preconizadas na apostila acadêmica *Programar com IA de forma responsável*, protegendo senhas via algoritmo bcrypt e blindando o sistema contra injeções de SQL por meio de prepared statements com PDO.
 
-### Mapeamento de Chaves Estrangeiras (Relacionamentos)
-- `competicoes.instituicao_organizadora_id` $\rightarrow$ `instituicoes.id`
-- `modalidades.competicao_id` $\rightarrow$ `competicoes.id`
-- `equipes.instituicao_id` $\rightarrow$ `instituicoes.id`
-- `equipes.competicao_id` $\rightarrow$ `competicoes.id`
-- `equipes.modalidade_id` $\rightarrow$ `modalidades.id`
-- `equipes.responsavel_id` $\rightarrow$ `usuarios.id`
-- `atletas.instituicao_id` $\rightarrow$ `instituicoes.id`
-- `atletas.usuario_id` $\rightarrow$ `usuarios.id` (opcional, relação 1:1 lógica)
-- `equipe_atletas.equipe_id` $\rightarrow$ `equipes.id`
-- `equipe_atletas.atleta_id` $\rightarrow$ `atletas.id`
-- `partidas.competicao_id` $\rightarrow$ `competicoes.id`
-- `partidas.modalidade_id` $\rightarrow$ `modalidades.id`
-- `partidas.equipe_a_id` $\rightarrow$ `equipes.id`
-- `partidas.equipe_b_id` $\rightarrow$ `equipes.id`
-- `estatisticas_atletas.partida_id` $\rightarrow$ `partidas.id`
-- `estatisticas_atletas.atleta_id` $\rightarrow$ `atletas.id`
-- `estatisticas_atletas.equipe_id` $\rightarrow$ `equipes.id`
-- `estatisticas_equipes.partida_id` $\rightarrow$ `partidas.id`
-- `estatisticas_equipes.equipe_id` $\rightarrow$ `equipes.id`
+---
 
-### Diagrama de Relacionamento Entidade-Relacionamento (DER em Mermaid)
-```mermaid
-erDiagram
-    INSTITUICOES ||--o{ COMPETICOES : organiza
-    INSTITUICOES ||--o{ EQUIPES : vincula
-    INSTITUICOES ||--o{ ATLETAS : matricula
-    COMPETICOES ||--o{ MODALIDADES : possui
-    COMPETICOES ||--o{ EQUIPES : disputa
-    COMPETICOES ||--o{ PARTIDAS : agrupa
-    MODALIDADES ||--o{ EQUIPES : classifica
-    MODALIDADES ||--o{ PARTIDAS : rege
-    USUARIOS ||--o{ EQUIPES : lidera
-    USUARIOS ||--o| ATLETAS : autentica
-    EQUIPES ||--o{ EQUIPE_ATLETAS : escalada_em
-    ATLETAS ||--o{ EQUIPE_ATLETAS : inscrito_em
-    EQUIPES ||--o{ PARTIDAS : joga_mandante_ou_visitante
-    PARTIDAS ||--o{ ESTATISTICAS_ATLETAS : gera
-    ATLETAS ||--o{ ESTATISTICAS_ATLETAS : pontua
-    PARTIDAS ||--o{ ESTATISTICAS_EQUIPES : consolida
-    EQUIPES ||--o{ ESTATISTICAS_EQUIPES : totaliza
+## 4. Escopo do Sistema
+
+### 4.1. Módulos Implementados no Escopo Oficial (Versão 1.0)
+- **Módulo de Acesso e Identidade**: Registro público de novos usuários, login com validação segura de credenciais, encerramento de sessão (logout) e barramento RBAC para proteção de rotas restritas.
+- **Módulo Institucional e Organizacional**: Cadastro e manutenção dos campi dos Institutos Federais, gestão de torneios oficiais (JIFRO, JIF Regional) e parametrização de esportes por categoria (masculino, feminino, misto) e formato (coletivo ou individual).
+- **Módulo de Delegações e Elencos**: Inscrição de equipes representativas por campus/modalidade, associação de técnicos responsáveis e vinculação de estudantes-atletas com dorsal e posição.
+- **Módulo de Competições e Tabela de Jogos**: Programação de partidas com data, horário, local/quadra e fase, impedindo confrontos entre equipes de modalidades distintas ou da mesma instituição em chaveamento irregular.
+- **Módulo de Súmula e Homologação de Resultados**: Lançamento de placares, encerramento oficial de partidas e registro minucioso de estatísticas por atleta (gols, advertências e expulsões).
+- **Módulo de Classificação e Inteligência**: Exibição pública de tabelas calculadas automaticamente e painéis gráficos com destaques individuais e coletivos dos Institutos Federais.
+- **Módulo Administrativo Integrado (`/admin`)**: Painel de governança restrito para auditagem, controle de permissões de usuários e ativação/inativação de cadastros.
+
+---
+
+## 5. Público-Alvo e Perfis de Usuários (RBAC)
+
+O sistema implementa o modelo de Controle de Acesso Baseado em Papéis (*Role-Based Access Control* — RBAC), discriminando cinco níveis operacionais estritos definidos no arquivo [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php):
+
+| Perfil | Identificador Técnico | Escopo de Permissões e Ações Permitidas |
+| :--- | :--- | :--- |
+| **Administrador Geral** | `admin` | Acesso irrestrito a todas as áreas do sistema. Responsável por cadastrar instituições/campi, gerenciar usuários, alterar perfis de acesso, auditar registros e intervir globalmente nas competições. |
+| **Coordenador / Organizador** | `organizador` | Responsável por criar competições, definir modalidades esportivas oficiais, homologar inscrições, agendar partidas, preencher a súmula eletrônica com placares e eventos, e publicar classificações. |
+| **Treinador / Professor** | `treinador` | Responsável por inscrever equipes representativas do seu campus nas competições ativas, gerenciar o elenco de estudantes-atletas sob sua tutela e acompanhar o rendimento tático de sua equipe. |
+| **Estudante-Atleta** | `atleta` | Acesso ao seu Boletim Informativo Diário (BID) individual, consulta de suas estatísticas pessoais acumuladas (gols, cartões e jogos), histórico de equipes que integrou e acompanhamento do calendário. |
+| **Visitante / Público Geral** | `visitante` *(não autenticado)* | Consulta pública em modo somente-leitura aos placares em tempo real, tabelas de classificação, páginas de equipes, perfis BID e painéis de inteligência, sem permissão para criar ou modificar dados. |
+
+---
+
+## 6. Casos de Uso
+
+A dinâmica operacional do JIF+ é norteada por 12 casos de uso principais, cujos fluxos foram validados funcionalmente na aplicação:
+
+- **UC01 — Cadastrar-se e autenticar-se no sistema**:
+  - *Ator*: Visitante / Usuário.
+  - *Fluxo Principal*: O visitante acessa a tela de cadastro, preenche nome, e-mail e senha. O sistema valida os campos, criptografa a senha com hash bcrypt e grava o registro. Na tela de login, informa credenciais; o sistema autentica contra o banco relacional, regenera o ID de sessão e direciona o usuário ao painel correspondente ao seu perfil.
+- **UC02 — Gerenciar usuários e permissões de acesso**:
+  - *Ator*: Administrador Geral.
+  - *Fluxo Principal*: O administrador acessa `admin/usuarios.php`, visualiza a listagem de contas registradas, altera o perfil funcional (`admin`, `organizador`, `treinador`, `atleta`) e ativa ou suspende contas.
+- **UC03 — Gerenciar instituições e campi**:
+  - *Ator*: Administrador Geral.
+  - *Fluxo Principal*: Em `admin/instituicoes.php`, cadastra novos campi dos Institutos Federais informando sigla, nome, campus e unidade federativa (UF).
+- **UC04 — Gerenciar competições e modalidades esportivas**:
+  - *Ator*: Coordenador / Organizador.
+  - *Fluxo Principal*: Cadastra eventos (ex.: JIFRO 2026) com período de realização, local-sede e status operacional. Vincula as modalidades oficiais (Futsal, Vôlei, Basquete, Xadrez, Atletismo) definindo categoria e formato.
+- **UC05 — Gerenciar equipes representativas**:
+  - *Ator*: Treinador ou Coordenador.
+  - *Fluxo Principal*: Registra a equipe vinculando-a obrigatoriamente a uma instituição, uma competição e uma modalidade ativa, indicando o professor responsável.
+- **UC06 — Gerenciar atletas e inscrição em equipes**:
+  - *Ator*: Treinador ou Coordenador.
+  - *Fluxo Principal*: Cadastra os dados do estudante-atleta (nome, matrícula institucional e data de nascimento) e o inscreve na equipe designando o número da camisa (dorsal) e sua posição esportiva.
+- **UC07 — Agendar e programar partidas**:
+  - *Ator*: Coordenador / Organizador.
+  - *Fluxo Principal*: Cria o confronto selecionando a competição, a modalidade, as duas equipes adversárias (mandante e visitante distintas), fase/rodada, data, horário e quadra/local de disputa.
+- **UC08 — Registrar súmula eletrônica e estatísticas**:
+  - *Ator*: Coordenador / Organizador.
+  - *Fluxo Principal*: Na tela `admin/sumula.php`, o coordenador atualiza os placares parciais/finais, registra eventos individuais (gols marcados, cartões amarelos, cartões vermelhos e faltas) vinculados aos atletas e encerra oficialmente o jogo.
+- **UC09 — Consultar página da equipe e histórico**:
+  - *Ator*: Todos os perfis / Visitante.
+  - *Fluxo Principal*: O usuário acessa a tela de equipes, filtra por campus ou esporte e visualiza o elenco completo, comissão técnica, calendário de partidas e resultados anteriores.
+- **UC10 — Pesquisar e filtrar informações esportivas**:
+  - *Ator*: Todos os perfis / Visitante.
+  - *Fluxo Principal*: Aplicação de buscas textuais e filtros combinados por campus, modalidade, atleta ou competição nas páginas públicas da plataforma.
+- **UC11 — Visualizar painéis de inteligência e desempenho**:
+  - *Ator*: Todos os perfis / Visitante.
+  - *Fluxo Principal*: Consulta visual aos rankings de artilharia (Chuteira de Ouro), eficiência ofensiva por campus participante e índice de disciplina (Fair Play) calculados a partir dos dados consolidados das súmulas.
+- **UC12 — Validar regras de negócio e garantir persistência**:
+  - *Ator*: Sistema / Backend PHP.
+  - *Fluxo Principal*: Intercepta toda requisição de entrada, sanitiza strings, valida restrições no servidor e persiste os dados em tabelas InnoDB utilizando transações e queries parametrizadas.
+
+---
+
+## 7. Requisitos Funcionais
+
+A tabela a seguir consolida os 17 Requisitos Funcionais (RF01 a RF17), indicando o status verificado em código-fonte e os arquivos de implementação:
+
+| Código | Descrição do Requisito Funcional | Status Real | Arquivos de Implementação no Sistema |
+| :--- | :--- | :---: | :--- |
+| **RF01** | Autocadastro de usuários com validação de formato de e-mail, verificação de duplicidade e obrigatoriedade de senha com mínimo de 6 caracteres. | **Implementado** | [`cadastro.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/cadastro.php), [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php) |
+| **RF02** | Autenticação de credenciais via e-mail e senha, controle de sessão ativa, proteção contra Session Fixation e encerramento seguro (logout). | **Implementado** | [`login.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/login.php), [`logout.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/logout.php), [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php) |
+| **RF03** | Controle estrito de acesso e permissões (RBAC) bloqueando o acesso de usuários não autorizados a rotas administrativas (`HTTP 403`). | **Implementado** | [`config/auth.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/auth.php), [`admin/usuarios.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/usuarios.php) |
+| **RF04** | Gestão de instituições e campi participantes (cadastro, listagem e vinculação geográfica por UF). | **Implementado** | [`admin/instituicoes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/instituicoes.php) |
+| **RF05** | Gestão de competições (cadastro de edição, ano, períodos de início/término, local-sede e controle de status: planejada, em andamento, encerrada). | **Implementado** | [`admin/competicoes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/competicoes.php), [`competicoes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/competicoes.php) |
+| **RF06** | Gestão de modalidades esportivas com vínculo direto à competição, definindo categoria (masculino/feminino/misto) e formato (coletiva/individual). | **Implementado** | [`admin/modalidades.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/modalidades.php), [`modalidades.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/modalidades.php) |
+| **RF07** | Gestão de equipes esportivas associadas a campus, competição, modalidade e técnico responsável, prevenindo duplicidades. | **Implementado** | [`admin/equipes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/equipes.php), [`equipes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/equipes.php) |
+| **RF08** | Cadastro e inscrição de atletas em equipes, registrando matrícula institucional, dorsal (número da camisa) e posição em campo. | **Implementado** | [`admin/atletas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/atletas.php) |
+| **RF09** | Perfil esportivo individual do atleta (Boletim Informativo do Atleta — BID) com histórico de partidas, equipes integradas e gols/pontos acumulados. | **Implementado** | [`atletas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/atletas.php) |
+| **RF10** | Agendamento e programação de partidas oficiais definindo fase, data, horário, local/quadra e duas equipes distintas da mesma modalidade. | **Implementado** | [`admin/partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/partidas.php), [`partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/partidas.php) |
+| **RF11** | Registro de placares parciais e homologação de resultado final com transição de situação da partida para "encerrada". | **Implementado** | [`admin/sumula.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/sumula.php), [`partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/partidas.php) |
+| **RF12** | Súmula eletrônica com registro de eventos individuais de atletas (gols, advertências por cartão amarelo, expulsões e faltas coletivas). | **Implementado** | [`admin/sumula.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/admin/sumula.php) |
+| **RF13** | Visualização pública da página da equipe contendo listagem do elenco completo, comissão técnica, próximos jogos e retrospecto de resultados. | **Implementado** | [`equipes.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/equipes.php) |
+| **RF14** | Mecanismo de busca textual e filtros dinâmicos combinados por campus, modalidade, atleta, equipe e status de confronto. | **Implementado** | [`index.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/index.php), [`atletas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/atletas.php), [`partidas.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/partidas.php), [`assets/js/app.js`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/assets/js/app.js) |
+| **RF15** | Painéis analíticos e relatórios de inteligência com cálculo de classificação por pontos, Chuteira de Ouro e Troféu Fair Play. | **Implementado** | [`classificacao.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/classificacao.php), [`inteligencia.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/inteligencia.php), [`index.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/index.php) |
+| **RF16** | Validação mandatória no backend para todas as regras de negócio e integridade de tipos antes da persistência de formulários. | **Implementado** | Todos os scripts em `admin/*.php`, [`cadastro.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/cadastro.php) e `config/` |
+| **RF17** | Persistência relacional integral em banco de dados relacional com restrições de chaves estrangeiras e transações estruturadas. | **Implementado** | [`database/schema.sql`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/database/schema.sql), [`config/database.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/database.php) |
+
+---
+
+## 8. Requisitos Não Funcionais
+
+Os Requisitos Não Funcionais (RNF01 a RNF11) atendem às diretrizes de engenharia de software e ao Checklist de Segurança do Anexo B da apostila:
+
+- **RNF01 — Criptografia e Armazenamento Seguro de Senhas**: As credenciais dos usuários nunca são gravadas em texto puro. O sistema emprega a função nativa `password_hash()` com algoritmo `bcrypt` e fator de custo de processamento ajustado (`cost => 10`). A autenticação utiliza `password_verify()`.
+- **RNF02 — Validação Obrigatória no Servidor**: Todas as entradas de dados via formulário (POST e GET) passam por filtragem, sanitização (`strip_tags`, `htmlspecialchars`) e validação de formato e comprimento no backend PHP, operando independentemente de validações do cliente.
+- **RNF03 — Proteção contra Injeção de SQL (SQL Injection)**: Todas as operações de leitura e escrita com o banco de dados utilizam exclusivamente a interface **PDO com prepared statements** parametrizados. A diretiva `PDO::ATTR_EMULATE_PREPARES` está explicitamente desativada (`false`), garantindo que o servidor do banco execute a compilação do plano de consulta em separado dos valores.
+- **RNF04 — Isolamento de Segredos e Variáveis de Ambiente**: Credenciais de banco de dados (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`) residem exclusivamente no arquivo `.env`. Esse arquivo está registrado no `.gitignore` para impedir sua submissão ao versionamento Git no GitHub. Um arquivo modelo [`/.env.example`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/.env.example) é fornecido para configuração do ambiente.
+- **RNF05 — Controle de Acesso às Rotas e Segurança de Sessão**: Cada requisição a áreas restritas (`/admin/*`) executa a função `exigirAutenticacao()`, que verifica a existência de sessão ativa e confronta o perfil do usuário logado com os privilégios requeridos. Sessões utilizam cookies com flags `HttpOnly` (prevenção contra roubo via script XSS) e `SameSite=Lax`.
+- **RNF06 — Privacidade de Dados de Estudantes-Atletas**: O sistema não armazena nem expõe publicamente dados pessoais sensíveis (como endereços residenciais, telefones pessoais ou documentos civis como CPF). O perfil público exibe unicamente nome social/desportivo, matrícula institucional, foto esportiva, dorsal e histórico de partidas.
+- **RNF07 — Tratamento Seguro de Erros e Exceções**: Mensagens técnicas nativas do banco de dados, nomes internos de colunas e stack traces do PHP não são exibidos aos usuários em tela. Erros são capturados em blocos `try/catch`, gravados no log interno do servidor via `error_log()` e substituídos por avisos visuais amigáveis.
+- **RNF08 — Protocolo de Comunicação**: O sistema é compatível com conexões seguras sob HTTPS/TLS em ambiente de produção, possuindo configuração condicional para cookie seguro (`secure => true` quando detectado tráfego HTTPS).
+- **RNF09 — Desempenho e Tempo de Resposta**: Consultas públicas e painéis analíticos são otimizados com índices específicos nas colunas mais consultadas (`idx_partidas_data_hora`, `idx_atletas_matricula`, `idx_usuarios_email`), mantendo o tempo de renderização abaixo de 2 segundos sob condições de carga padrão.
+- **RNF10 — Responsividade e Acessibilidade**: A interface visual foi desenvolvida em CSS3 responsivo utilizando layouts adaptáveis com Flexbox e CSS Grid. O sistema oferece usabilidade homogênea em navegadores desktop, tablets e smartphones com larguras a partir de 360px.
+- **RNF11 — Integridade Relacional e Suporte a Transações**: O esquema físico do banco adota o mecanismo de armazenamento **InnoDB** no MySQL, impondo chaves estrangeiras (`FOREIGN KEY`) com regras de integridade (`ON DELETE RESTRICT` e `ON DELETE CASCADE`) para garantir a consistência das entidades esportivas.
+
+---
+
+## 9. Regras de Negócio
+
+As operações do JIF+ seguem as seguintes regras de negócio mandatórias:
+
+- **RN01 — Unicidade de Cadastro por E-mail**: Não é permitido o cadastro de dois usuários com o mesmo endereço de e-mail no sistema.
+- **RN02 — Vínculo Obrigatório de Equipe**: Toda equipe deve estar estritamente vinculada a uma instituição (campus), uma competição existente e uma modalidade esportiva cadastrada nessa competição.
+- **RN03 — Validação de Confrontos**: Uma partida só pode ser agendada entre equipes pertencentes à mesma competição e modalidade. As equipes mandante e visitante devem ser distintas (`equipe_a_id != equipe_b_id`).
+- **RN04 — Sistema de Pontuação Oficial**: O cálculo de pontuação na classificação segue o padrão desportivo internacional:
+  - Vitória: 3 pontos
+  - Empate: 1 ponto
+  - Derrota: 0 pontos
+- **RN05 — Critérios Oficiais de Desempate**: Em caso de empate em pontos na tabela de classificação, o ordenamento segue a hierarquia:
+  1. Maior número de vitórias;
+  2. Maior Saldo de Gols (SG) / Saldo de Pontos;
+  3. Maior número de Gols Pró (GP);
+  4. Menor número de Gols Sofridos (GC).
+- **RN06 — Homologação de Partidas**: Placares só produzem efeitos estatísticos na classificação geral e nos perfis individuais após a situação da partida ser alterada para `encerrada`. Partidas com status `agendada` ou `cancelada` não computam pontos.
+- **RN07 — Proteção contra Exclusão de Histórico (Integridade Referencial)**: Equipes e instituições que possuam vínculos ativos em partidas ou súmulas não podem ser excluídas fisicamente do banco de dados (`ON DELETE RESTRICT`), prevenindo inconsistências em registros históricos.
+- **RN08 — Concessão Restrita de Privilégios**: Novos usuários cadastrados publicamente pelo formulário web recebem por padrão o perfil `atleta` (ou solicitam `treinador`). A concessão de privilégios de `admin` ou `organizador` é de competência privativa de um Administrador Geral através da tela de gerenciamento de usuários.
+
+---
+
+## 10. Arquitetura e Tecnologias Utilizadas
+
+A arquitetura do sistema adota uma abordagem estruturada em camadas, priorizando simplicidade, manutenibilidade, conformidade pedagógica e segurança nativa:
+
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                    CAMADA DE APRESENTAÇÃO                     │
+│   Navegador Web: HTML5 Semântico, CSS3 Moderno, ES6+ JS      │
+│   (Design Responsivo, Identidade Visual IFRO, Interatividade) │
+└───────────────────────────────┬───────────────────────────────┘
+                                │ Requisições HTTP / POST / GET
+                                ▼
+┌───────────────────────────────────────────────────────────────┐
+│                    CAMADA DE APLICAÇÃO (PHP)                  │
+│   Controladores e Páginas: index.php, atletas.php, admin/*    │
+│   Módulos Centrais:                                           │
+│   ├── config/auth.php     (Autenticação, Sessões, RBAC)       │
+│   └── includes/           (Header, Footer, Alertas Visuais)   │
+└───────────────────────────────┬───────────────────────────────┘
+                                │ Camada de Acesso a Dados
+                                ▼
+┌───────────────────────────────────────────────────────────────┐
+│               CAMADA DE PERSISTÊNCIA (PDO SINGLETON)          │
+│   config/database.php (Prepared Statements, ATTR_EMULATE=false│
+│   Gerenciamento de Transações e Conexões Seguras              │
+└───────────────────────────────┬───────────────────────────────┘
+                                │
+        ┌───────────────────────┴───────────────────────┐
+        ▼                                               ▼
+┌───────────────────────────────┐       ┌───────────────────────────────┐
+│  MOTOR PRINCIPAL (PRODUÇÃO)   │       │ MOTOR DE CONTINGÊNCIA (DEV)   │
+│  MySQL 8.0 / MariaDB (InnoDB) │       │ SQLite (jif_plus.sqlite)      │
+│  database/schema.sql          │       │ Suporte local transparente    │
+└───────────────────────────────┘       └───────────────────────────────┘
 ```
 
-### Fluxo Principal de Negócio no Banco
-1. O Administrador cadastra instituições participantes e usuários com perfis correspondentes.
-2. O Coordenador cria uma competição oficial (ex.: JIFRO 2026) e vincula modalidades esportivas (ex.: Futsal Masculino, Vôlei Feminino).
-3. O Treinador cadastra sua equipe e inscreve os atletas do seu campus na modalidade e competição.
-4. O Coordenador gera a tabela da competição agendando partidas entre equipes cadastradas.
-5. Ao término de cada jogo, o Coordenador insere os placares finais e os eventos estatísticos (gols, pontuações e cartões) por atleta e equipe.
-6. O sistema atualiza em tempo real as consultas públicas, calculando a classificação das equipes, o histórico esportivo (BID) dos atletas e os painéis de inteligência esportiva.
+### 10.1. Justificativa da Stack Selecionada
+1. **PHP 8.2+ Puro Estruturado**: Atende integralmente à formação técnica do estudante Arthur Henrique Gimax Oliveira no IFRO, permitindo exercitar fundamentos essenciais da disciplina (segurança, controle de sessão, manipulação de estados e arquitetura web) sem a complexidade de abstração de frameworks pesados.
+2. **Camada de Abstração PDO**: Garante portabilidade e blindagem técnica mandatória contra SQL Injection com suporte nativo a consultas preparadas.
+3. **Mecanismo Duplo de Banco de Dados**:
+   - **MySQL 8.0 / MariaDB**: Motor de banco principal configurado com mecanismo **InnoDB**, suportando transações atômicas, chaves estrangeiras e integridade referencial.
+   - **SQLite Local de Contingência**: Configurado em [`config/database.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/config/database.php) para garantir alta disponibilidade no ambiente de desenvolvimento local, ativando automaticamente o arquivo `database/jif_plus.sqlite` caso as credenciais locais do MySQL sofram interrupções momentâneas.
 
-## 7. Critérios de aceite
-- **CA01 (Referente a RF01 — Cadastro de Usuário)**:
-  - *Dado que* um novo visitante preenche o formulário de cadastro com nome completo, e-mail inédito e senha com requisitos válidos,
-  - *quando* aciona a opção "Criar Conta",
-  - *então* o sistema deve persistir o usuário com a senha convertida em hash seguro, gravar a conta no banco e exibir mensagem de confirmação de cadastro com sucesso.
-- **CA02 (Referente a RF02 — Autenticação e Logout)**:
-  - *Dado que* um usuário cadastrado informa seu e-mail e senha corretos,
-  - *quando* submete o formulário de login,
-  - *então* o sistema autentica as credenciais, inicializa a sessão segura e redireciona o usuário para o painel correspondente ao seu perfil.
-  - *Dado que* o usuário informa senha inválida,
-  - *quando* tenta autenticar-se,
-  - *então* o sistema deve rejeitar o acesso, mantendo-o na tela de login com a mensagem "Credenciais inválidas" e sem revelar se o e-mail existe.
-- **CA03 (Referente a RF03 — Controle de Perfis e Acesso)**:
-  - *Dado que* um usuário autenticado com perfil "Atleta" ou um visitante tenta acessar diretamente a URL administrativa de cadastro de competições,
-  - *quando* a requisição atinge o servidor,
-  - *então* o sistema deve interceptar o acesso, bloquear a execução e redirecionar o usuário para a página inicial com aviso de permissão negada (HTTP 403).
-- **CA04 (Referente a RF04 — Gestão de Instituições)**:
-  - *Dado que* o Administrador informa nome, sigla, campus e estado de um Instituto Federal,
-  - *quando* submete o formulário de cadastro,
-  - *então* os dados da instituição são gravados no banco de dados e passam a ser listados na seleção de campus para vínculo de equipes e atletas.
-- **CA05 (Referente a RF05 — Gestão de Competições)**:
-  - *Dado que* o Coordenador preenche título da competição, edição, datas de início e término válidas e seleciona a instituição organizadora,
-  - *quando* salva a competição,
-  - *então* o registro é gravado com status "planejada" e torna-se disponível para vinculação de modalidades e equipes.
-- **CA06 (Referente a RF06 — Gestão de Modalidades)**:
-  - *Dado que* existe uma competição cadastrada e o Coordenador informa o nome da modalidade, categoria e tipo,
-  - *quando* conclui o cadastro,
-  - *então* a modalidade é persistida vinculada à competição e disponibilizada para inscrição de equipes.
-- **CA07 (Referente a RF07 — Gestão de Equipes)**:
-  - *Dado que* uma competição e uma modalidade estão ativas e o Treinador informa o nome da equipe associada ao seu campus,
-  - *quando* confirma a criação da equipe,
-  - *então* a equipe é armazenada no banco com as chaves estrangeiras de instituição, competição e modalidade devidamente preenchidas.
-- **CA08 (Referente a RF08 — Cadastro e Vínculo de Atletas)**:
-  - *Dado que* uma equipe está cadastrada e o responsável submete os dados de um estudante-atleta (nome, matrícula e data de nascimento),
-  - *quando* confirma a inclusão na equipe com o número da camisa,
-  - *então* o sistema valida a matrícula, grava o atleta na tabela `atletas` e cria o relacionamento correspondente na tabela `equipe_atletas`.
-- **CA09 (Referente a RF09 — Perfil Esportivo do Atleta)**:
-  - *Dado que* um atleta possui histórico de participações, partidas e pontuações gravadas,
-  - *quando* qualquer usuário acessa a página de perfil público do atleta,
-  - *então* o sistema deve consultar o banco e renderizar seus dados esportivos, equipes em que jogou, partidas disputadas e total de gols/pontos acumulados.
-- **CA10 (Referente a RF10 — Agendamento de Partidas)**:
-  - *Dado que* existem duas equipes distintas cadastradas na mesma competição e modalidade,
-  - *quando* o Coordenador agenda a partida definindo data, hora e local,
-  - *então* a partida é salva com situação "agendada" e exibida no cronograma de jogos da competição.
-- **CA11 (Referente a RF11 — Lançamento de Placares)**:
-  - *Dado que* uma partida cadastrada é finalizada e o Coordenador informa o placar de cada equipe (ex.: Equipe A 3 x 1 Equipe B),
-  - *quando* confirma o encerramento da partida,
-  - *então* o sistema atualiza o status para "encerrada", persiste os placares e reflete a vitória/derrota na tabela de classificação da modalidade.
-- **CA12 (Referente a RF12 — Registro de Estatísticas Individuais)**:
-  - *Dado que* uma partida está em andamento ou finalizada e o Coordenador registra eventos como gols ou faltas para um atleta participante,
-  - *quando* o formulário de súmula é enviado,
-  - *então* cada evento é persistido na tabela `estatisticas_atletas` vinculado à partida e ao atleta, recalculando suas estatísticas no perfil esportivo.
-- **CA13 (Referente a RF13 — Página da Equipe)**:
-  - *Dado que* uma equipe possui elenco e jogos registrados,
-  - *quando* um usuário acessa a visualização da equipe,
-  - *então* o sistema lista todos os atletas vinculados, comissão técnica responsável, partidas agendadas e histórico de resultados anteriores.
-- **CA14 (Referente a RF14 — Busca e Filtros)**:
-  - *Dado que* o usuário preenche o campo de busca com o nome de um atleta ou seleciona filtros combinados de campus e modalidade,
-  - *quando* executa a consulta,
-  - *então* o sistema retorna exclusivamente os registros que atendem aos parâmetros filtrados, ou exibe mensagem amigável caso nenhum registro seja encontrado.
-- **CA15 (Referente a RF15 — Painéis de Indicadores e Desempenho)**:
-  - *Dado que* partidas foram finalizadas com placares e estatísticas registradas,
-  - *quando* qualquer usuário navega até a seção de painéis esportivos da competição,
-  - *então* o sistema deve calcular e exibir indicadores consolidados, como artilharia, melhor ataque, melhor defesa e tabela de pontuação geral por chave.
-- **CA16 (Referente a RF16 — Validação no Servidor e Tratamento de Erros)**:
-  - *Dado que* um usuário tenta submeter um formulário com campos obrigatórios vazios ou tenta agendar partida entre equipes de modalidades distintas,
-  - *quando* a requisição chega ao backend,
-  - *então* o sistema deve rejeitar a operação, não gravar dados inválidos e retornar respostas claras de validação indicando os campos a serem corrigidos.
-- **CA17 (Referente a RF17 — Persistência e Integridade de Dados)**:
-  - *Dado que* qualquer registro esportivo (competição, equipe, atleta, partida ou estatística) foi gravado com sucesso,
-  - *quando* o servidor for reiniciado ou a página for atualizada sucessivas vezes,
-  - *então* os dados devem permanecer íntegros, consistentes e recuperáveis a partir do banco de dados relacional.
+---
 
-## 8. Decisão de stack e deploy
+## 11. Modelo de Dados e Diagrama Entidade-Relacionamento (DER)
 
-### 1. Tecnologias Selecionadas (Stack Principal)
-- **Backend**: **PHP 8.2+** estruturado, utilizando **PDO (PHP Data Objects)** para conexões seguras e execução de queries parametrizadas com prepared statements.
-- **Frontend**: **HTML5**, **CSS3** (com layouts responsivos baseados em Flexbox/Grid) e **JavaScript nativo (ES6+)** para interatividade, máscaras de formulário e chamadas assíncronas (Fetch API).
-- **Banco de Dados**: **MySQL 8.0** (ou MariaDB 10.x), configurado com mecanismo de armazenamento **InnoDB**, garantindo integridade referencial por chaves estrangeiras (`FOREIGN KEY`), transações ACID e consultas relacionais otimizadas.
-- **Versionamento**: **Git** para controle de versão local e repositório hospedado no **GitHub**, seguindo fluxo de commits atômicos e descritivos por funcionalidade.
+O banco de dados relacional é composto por 10 tabelas normalizadas, definidas em [`database/schema.sql`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/database/schema.sql):
 
-### 2. Justificativa da Escolha da Stack
-- **Aproveitamento de competências técnicas**: a escolha de PHP e MySQL aproveita a base técnica e experiência do estudante Arthur Henrique Gimax Oliveira (3º ano Técnico em Informática do IFRO Calama), declarada formalmente no Formulário Centelha (conhecimentos em PHP, HTML, CSS, SQL, MySQL e construção de sistemas CRUD).
-- **Foco pedagógico e segurança**: ao utilizar PHP nativo moderno com PDO e MySQL, o estudante exercita diretamente os fundamentos ensinados na disciplina de Desenvolvimento de Sistemas: validação no backend, tratamento contra SQL injection via prepared statements, hashing de senhas e modelagem relacional clara, sem complexidade acidental de frameworks externos que obscureçam a lógica.
+### 11.1. Dicionário de Dados
 
-### 3. Estratégia de Hospedagem e Deploy Compatível
-- **Incompatibilidade com Vercel Tradicional**: conforme expressamente destacado na apostila do professor (*Programar com IA de forma responsável*, Fase 6), a plataforma **Vercel não oferece suporte nativo à execução de servidores PHP com Apache/Nginx e MySQL tradicional**. Indicar a Vercel diretamente para PHP/MySQL tradicional sem prever uma arquitetura compatível configuraria um erro conceitual grave.
-- **Destino de Hospedagem Escolhido**:
-  - Para a publicação do protótipo acadêmico em produção, será utilizada uma plataforma com suporte integral ao ecossistema LAMP (Linux, Apache, PHP, MySQL), tais como:
-    1. **Alwaysdata** ou **InfinityFree**: provedores de hospedagem web gratuitos e amplamente utilizados em ambientes educacionais, com suporte pleno a PHP 8.x, phpMyAdmin e banco MySQL remoto; ou
-    2. **Render** / **Railway** utilizando container (Docker) com servidor Apache+PHP e banco MySQL / MariaDB gerenciado em nuvem; ou
-    3. Servidor de aplicação da infraestrutura acadêmica do IFRO.
-- **Caminho Alternativo Formalizado (Se a publicação for mandatoriamente via Vercel)**:
-  - Caso o professor exija como requisito estrito da Fase 6 o uso exclusivo da plataforma Vercel, a aplicação será estruturada utilizando **Next.js (React / Node.js) com TypeScript** no frontend/backend serverless e banco de dados relacional **Neon Postgres** na nuvem (que possui integração direta em um clique no painel da Vercel). Essa decisão de transição, caso adotada, será documentada no `CHANGELOG.md` e na versão final da spec na Fase 5.
+1. **`usuarios`**: Contas e autenticação.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador único.
+   - `nome` (VARCHAR(150), NOT NULL): Nome completo do usuário.
+   - `email` (VARCHAR(150), NOT NULL, UNIQUE): E-mail de acesso.
+   - `senha_hash` (VARCHAR(255), NOT NULL): Hash bcrypt da senha.
+   - `perfil` (ENUM('admin', 'organizador', 'treinador', 'atleta'), NOT NULL, DEFAULT 'atleta'): Perfil RBAC.
+   - `ativo` (TINYINT(1), NOT NULL, DEFAULT 1): Status da conta.
+   - `criado_em` (DATETIME, NOT NULL, DEFAULT CURRENT_TIMESTAMP).
+2. **`instituicoes`**: Campi da Rede Federal.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador da instituição/campus.
+   - `nome` (VARCHAR(150), NOT NULL): Nome institucional (ex.: Instituto Federal de Rondônia).
+   - `sigla` (VARCHAR(30), NOT NULL): Sigla (ex.: IFRO).
+   - `campus` (VARCHAR(100), NOT NULL): Campus (ex.: Porto Velho Calama).
+   - `estado` (CHAR(2), NOT NULL): UF (ex.: RO).
+3. **`competicoes`**: Eventos esportivos.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador da competição.
+   - `instituicao_organizadora_id` (INT, NOT NULL, FK `instituicoes.id`): Campus anfitrião.
+   - `nome` (VARCHAR(150), NOT NULL): Título oficial (ex.: JIFRO 2026).
+   - `edicao` (VARCHAR(50), NOT NULL): Edição do torneio.
+   - `ano` (INT, NOT NULL): Ano de realização.
+   - `data_inicio` (DATE, NOT NULL): Início das disputas.
+   - `data_fim` (DATE, NOT NULL): Encerramento das disputas.
+   - `local_sede` (VARCHAR(150), NOT NULL): Cidade-sede.
+   - `status` (ENUM('planejada', 'em_andamento', 'encerrada'), NOT NULL, DEFAULT 'planejada').
+4. **`modalidades`**: Esportes disputados na competição.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador da modalidade.
+   - `competicao_id` (INT, NOT NULL, FK `competicoes.id`): Torneio ao qual pertence.
+   - `nome` (VARCHAR(100), NOT NULL): Esporte (ex.: Futsal, Vôlei, Basquete, Xadrez).
+   - `categoria` (ENUM('masculino', 'feminino', 'misto'), NOT NULL): Gênero/categoria.
+   - `tipo` (ENUM('coletiva', 'individual'), NOT NULL): Formato da modalidade.
+   - `status` (ENUM('ativa', 'inativa'), NOT NULL, DEFAULT 'ativa').
+5. **`equipes`**: Equipes representativas dos campi.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador da equipe.
+   - `instituicao_id` (INT, NOT NULL, FK `instituicoes.id`): Campus de origem.
+   - `competicao_id` (INT, NOT NULL, FK `competicoes.id`): Torneio disputado.
+   - `modalidade_id` (INT, NOT NULL, FK `modalidades.id`): Esporte disputado.
+   - `responsavel_id` (INT, NOT NULL, FK `usuarios.id`): Professor/técnico responsável.
+   - `nome` (VARCHAR(150), NOT NULL): Nome oficial de exibição da equipe.
+6. **`atletas`**: Cadastro de estudantes-atletas.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador do atleta.
+   - `usuario_id` (INT, NULL, FK `usuarios.id`): Vínculo opcional com conta de login.
+   - `instituicao_id` (INT, NOT NULL, FK `instituicoes.id`): Campus de matrícula.
+   - `nome` (VARCHAR(150), NOT NULL): Nome completo do estudante.
+   - `matricula_estudantil` (VARCHAR(50), NOT NULL): Matrícula institucional no SUAP.
+   - `data_nascimento` (DATE, NULL): Data de nascimento.
+   - `foto_url` (VARCHAR(255), NULL): Caminho/URL da foto oficial do BID.
+   - `criado_em` (DATETIME, NOT NULL, DEFAULT CURRENT_TIMESTAMP).
+7. **`equipe_atletas`**: Tabela associativa de escalação e elenco.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador da inscrição.
+   - `equipe_id` (INT, NOT NULL, FK `equipes.id`): Equipe da inscrição.
+   - `atleta_id` (INT, NOT NULL, FK `atletas.id`): Atleta inscrito.
+   - `numero_camisa` (INT, NULL): Dorsal do atleta.
+   - `posicao` (VARCHAR(50), NULL): Posição tática em campo.
+   - `status_inscricao` (ENUM('regular', 'suspenso', 'inativo'), NOT NULL, DEFAULT 'regular').
+   - `UNIQUE KEY uk_equipe_atleta (equipe_id, atleta_id)`: Previne inscrição duplicada.
+8. **`partidas`**: Calendário de confrontos e resultados.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador do confronto.
+   - `competicao_id` (INT, NOT NULL, FK `competicoes.id`): Competição.
+   - `modalidade_id` (INT, NOT NULL, FK `modalidades.id`): Esporte disputado.
+   - `equipe_a_id` (INT, NOT NULL, FK `equipes.id`): Equipe mandante.
+   - `equipe_b_id` (INT, NOT NULL, FK `equipes.id`): Equipe visitante.
+   - `fase_rodada` (VARCHAR(50), NOT NULL): Fase (Grupos, Semifinal, Final).
+   - `data_hora` (DATETIME, NOT NULL): Horário e data agendados.
+   - `local_quadra` (VARCHAR(150), NOT NULL): Ginásio/quadra da disputa.
+   - `placar_a` (INT, NULL, DEFAULT NULL): Placar final da equipe mandante.
+   - `placar_b` (INT, NULL, DEFAULT NULL): Placar final da equipe visitante.
+   - `situacao` (ENUM('agendada', 'em_andamento', 'encerrada', 'cancelada'), NOT NULL, DEFAULT 'agendada').
+9. **`estatisticas_atletas`**: Eventos individuais da súmula.
+   - `id` (INT, PK, AUTO_INCREMENT): Identificador do registro.
+   - `partida_id` (INT, NOT NULL, FK `partidas.id`): Partida onde o evento ocorreu.
+   - `atleta_id` (INT, NOT NULL, FK `atletas.id`): Atleta autor do evento.
+   - `equipe_id` (INT, NOT NULL, FK `equipes.id`): Equipe do atleta.
+   - `tipo_estatistica` (VARCHAR(50), NOT NULL): Evento ('gol', 'ponto', 'falta', 'cartao_amarelo', 'cartao_vermelho').
+   - `valor` (INT, NOT NULL, DEFAULT 1): Quantidade computada.
+10. **`estatisticas_equipes`**: Indicadores consolidados por time.
+    - `id` (INT, PK, AUTO_INCREMENT): Identificador do registro coletivo.
+    - `partida_id` (INT, NOT NULL, FK `partidas.id`): Partida associada.
+    - `equipe_id` (INT, NOT NULL, FK `equipes.id`): Equipe associada.
+    - `tipo_estatistica` (VARCHAR(50), NOT NULL): Métrica ('pontos_total', 'faltas_coletivas', 'sets_vencidos').
+    - `valor` (INT, NOT NULL): Total registrado.
 
-### 4. Configuração de Variáveis de Ambiente e Segurança no Versionamento
-- As credenciais de conexão com o banco de dados (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`) e as chaves de criptografia de sessão residirão exclusivamente em arquivos de ambiente local (`.env` ou `config.local.php`), devidamente listados no arquivo `.gitignore` para nunca serem commitados no repositório GitHub.
-- No ambiente de deploy publicado, as variáveis de conexão serão configuradas diretamente no painel de controle do provedor de hospedagem, garantindo conformidade com o Checklist de Segurança (Anexo B da apostila).
+### 11.2. Diagrama Entidade-Relacionamento (DER em Mermaid)
+
+```mermaid
+erDiagram
+    INSTITUICOES ||--o{ COMPETICOES : "organiza"
+    INSTITUICOES ||--o{ EQUIPES : "representa"
+    INSTITUICOES ||--o{ ATLETAS : "matricula"
+    COMPETICOES ||--o{ MODALIDADES : "possui"
+    COMPETICOES ||--o{ EQUIPES : "disputa"
+    COMPETICOES ||--o{ PARTIDAS : "agrupa"
+    MODALIDADES ||--o{ EQUIPES : "classifica"
+    MODALIDADES ||--o{ PARTIDAS : "rege"
+    USUARIOS ||--o{ EQUIPES : "lidera"
+    USUARIOS ||--o| ATLETAS : "vincula_login"
+    EQUIPES ||--o{ EQUIPE_ATLETAS : "escala"
+    ATLETAS ||--o{ EQUIPE_ATLETAS : "integra"
+    EQUIPES ||--o{ PARTIDAS : "mandante_ou_visitante"
+    PARTIDAS ||--o{ ESTATISTICAS_ATLETAS : "gera_eventos"
+    ATLETAS ||--o{ ESTATISTICAS_ATLETAS : "acumula_estatisticas"
+    PARTIDAS ||--o{ ESTATISTICAS_EQUIPES : "totaliza"
+    EQUIPES ||--o{ ESTATISTICAS_EQUIPES : "consolida_metricas"
+```
+
+---
+
+## 12. Segurança da Aplicação (Conformidade com o Anexo B)
+
+A aplicação foi auditada conforme o Checklist de Segurança do Anexo B da apostila metodológica:
+
+1. **Armazenamento de Senhas (RNF01)**:
+   - Funções utilizadas: `password_hash($senha, PASSWORD_BCRYPT, ['cost' => 10])` e `password_verify($senha, $hash)`.
+   - Nenhuma senha em texto puro é registrada em logs ou armazenada no banco.
+2. **Proteção contra SQL Injection (RNF03)**:
+   - Conexão configurada em `config/database.php` com `PDO::ATTR_EMULATE_PREPARES => false`.
+   - Todas as 28 consultas SQL no código utilizam prepared statements com vinculação de parâmetros (`:param` ou array associativo em `execute()`).
+3. **Controle de Acesso e RBAC (RNF05)**:
+   - Verificação em nível de servidor antes do processamento de qualquer rota administrativa através da função `exigirAutenticacao(['admin', 'organizador'])`.
+   - Resposta HTTP 403 com layout visual amigável e bloqueio de execução caso o usuário não possua privilégios suficientes.
+4. **Sessões e Cookies Seguros**:
+   - Inicialização padronizada com `session_set_cookie_params()` impondo diretivas `httponly => true` (impossibilita leitura de sessão via JavaScript) e `samesite => 'Lax'`.
+   - Regeneração de ID de sessão (`session_regenerate_id(true)`) no momento do login para mitigar ataques de fixação de sessão.
+5. **Proteção contra Cross-Site Scripting (XSS)**:
+   - Todas as saídas de variáveis em templates HTML passam pela função `htmlspecialchars($var, ENT_QUOTES, 'UTF-8')`.
+   - Entradas de formulário são sanitizadas previamente via `strip_tags()` e filtros nativos do PHP (`FILTER_SANITIZE_EMAIL`).
+6. **Proteção contra Exposição de Dados Sensíveis (RNF04 e RNF07)**:
+   - Arquivo `.env` isolado no `.gitignore`.
+   - Modos de exibição de erros desativados em produção e mensagens de exceção de banco de dados capturadas sem revelação de estrutura de tabelas ou credenciais.
+
+---
+
+## 13. Interface e Navegação
+
+A interface visual do JIF+ adota a identidade institucional dos Institutos Federais, com paleta centrada no verde floresta (`#006633`), verde esportivo neon (`#00cc66`), dourado troféu (`#e6a100`) e tons neutros de alto contraste.
+
+### Mapa de Rotas e Navegação
+
+```text
+Portal JIF+
+├── Área Pública (Acesso Livre)
+│   ├── /index.php                  (Home: Placares ao vivo, próximos jogos e artilharia)
+│   ├── /competicoes.php            (Edições dos jogos e fases)
+│   ├── /modalidades.php            (Esportes, categorias e regulamentos)
+│   ├── /equipes.php                (Times participantes e elencos)
+│   ├── /atletas.php                (Boletim Informativo do Atleta - BID e histórico)
+│   ├── /partidas.php               (Calendário oficial e visualização de súmulas)
+│   ├── /classificacao.php          (Tabela oficial de pontuação com desempate)
+│   └── /inteligencia.php           (Painéis de inteligência esportiva e Fair Play)
+│
+├── Área de Acesso e Identidade
+│   ├── /login.php                  (Autenticação segura com validação de perfil)
+│   ├── /cadastro.php               (Autocadastro de estudantes-atletas e técnicos)
+│   └── /logout.php                 (Encerramento seguro de sessão)
+│
+└── Área Administrativa Restrita (/admin)
+    ├── /admin/index.php            (Painel de controle geral e atalhos operacionais)
+    ├── /admin/instituicoes.php     (Gestão de campi do Instituto Federal)
+    ├── /admin/competicoes.php      (Gestão e homologação de competições)
+    ├── /admin/modalidades.php      (Parametrização de esportes oficiais)
+    ├── /admin/equipes.php          (Inscrição de equipes e vínculos de técnicos)
+    ├── /admin/atletas.php          (Inscrição e vinculação de atletas às equipes)
+    ├── /admin/partidas.php         (Agendamento de jogos e rodadas)
+    ├── /admin/sumula.php           (Súmula eletrônica, placares, gols e cartões)
+    └── /admin/usuarios.php         (Gestão de usuários e permissões RBAC - Exclusivo Admin)
+```
+
+---
+
+## 14. Critérios de Aceitação e Testes
+
+A conformidade do sistema foi validada por uma bateria automatizada de testes implementada em [`tests/test_full_suite.php`](file:///c:/xampp/htdocs/4°Bim - Arthur Gimax - JIF+/tests/test_full_suite.php), correspondendo aos 17 Critérios de Aceitação (CA01 a CA17):
+
+| Critério | Requisito | Cenário de Teste Validado | Resultado no Teste Automatizado |
+| :---: | :---: | :--- | :---: |
+| **CA01** | RF01 | Cadastro de novo usuário persistido com hash bcrypt e validação de e-mail único. | **Aprovado (100%)** |
+| **CA02** | RF02 | Autenticação com credenciais corretas e rejeição de senhas inválidas sem vazamento de existência do e-mail. | **Aprovado (100%)** |
+| **CA03** | RF03 | Bloqueio de acesso a páginas administrativas por usuários sem privilégio (RBAC) e liberação para Administrador. | **Aprovado (100%)** |
+| **CA04** | RF04 | Cadastro e persistência de campus/instituição participante no banco de dados. | **Aprovado (100%)** |
+| **CA05** | RF05 | Cadastro de competição com datas de início/fim e gravação do status inicial "planejada". | **Aprovado (100%)** |
+| **CA06** | RF06 | Associação de modalidade esportiva vinculada a uma competição com categoria e formato válidos. | **Aprovado (100%)** |
+| **CA07** | RF07 | Inscrição de equipes com chaves estrangeiras válidas de instituição, competição e modalidade. | **Aprovado (100%)** |
+| **CA08** | RF08 | Inscrição de estudante-atleta com matrícula institucional, dorsal (número de camisa) e posição tática. | **Aprovado (100%)** |
+| **CA09** | RF09 | Consulta e renderização completa de perfil individual (BID) com histórico de partidas e gols. | **Aprovado (100%)** |
+| **CA10** | RF10 | Agendamento de confronto entre equipes distintas pertencentes à mesma competição e modalidade. | **Aprovado (100%)** |
+| **CA11** | RF11 | Lançamento de placares parciais/finais e transição de status da partida para "encerrada". | **Aprovado (100%)** |
+| **CA12** | RF12 | Registro de eventos individuais na súmula (gols e faltas) com reflexo imediato no perfil do atleta. | **Aprovado (100%)** |
+| **CA13** | RF13 | Visualização pública da equipe com elenco escalado, comissão técnica e histórico de resultados. | **Aprovado (100%)** |
+| **CA14** | RF14 | Mecanismo de busca textual parametrizada por nome de atleta e filtros esportivos combinados. | **Aprovado (100%)** |
+| **CA15** | RF15 | Cálculo automático da tabela de classificação (pontos 3/1/0, saldo de gols e gols pró). | **Aprovado (100%)** |
+| **CA16** | RF16 | Rejeição no servidor de entradas inválidas ou malformadas, com mensagens de erro claras. | **Aprovado (100%)** |
+| **CA17** | RF17 | Integridade referencial do banco de dados relacional e persistência permanente após transações. | **Aprovado (100%)** |
+
+**Resultado Geral dos Testes**: 17 de 17 critérios de aceitação validados com sucesso no script de teste oficial (Taxa de Sucesso: 100%).
+
+---
+
+## 15. Implantação e Execução Local
+
+### 15.1. Execução no Ambiente Local (XAMPP)
+O sistema está plenamente funcional e configurado para execução local no servidor XAMPP (Apache e MySQL):
+
+1. **Pré-requisitos**:
+   - XAMPP instalado com PHP 8.2 ou superior e MySQL 8.0/MariaDB ativo.
+   - Navegador web moderno (Google Chrome, Mozilla Firefox, Microsoft Edge).
+2. **Localização dos Arquivos**:
+   - Diretório de trabalho: `C:\xampp\htdocs\4°Bim - Arthur Gimax - JIF+\`
+3. **Inicialização dos Serviços**:
+   - Abrir o **XAMPP Control Panel** e iniciar os módulos **Apache** e **MySQL**.
+4. **Instalação do Banco de Dados**:
+   - Acessar pelo navegador: `http://localhost/4°Bim - Arthur Gimax - JIF+/database/setup.php`
+   - O script cria o banco `jif_plus`, aplica o esquema físico das 10 tabelas e popula a base com os dados iniciais do JIFRO.
+5. **Acesso à Aplicação**:
+   - URL Principal: `http://localhost/4°Bim - Arthur Gimax - JIF+/`
+   - URL Administrativa: `http://localhost/4°Bim - Arthur Gimax - JIF+/admin/`
+
+### 15.2. Diretrizes de Publicação Externa (Fase 6 da Metodologia)
+Conforme preconizado na apostila metodológica do professor:
+- **Status Atual da Implantação**: O projeto encontra-se homologado e em execução no ambiente local de desenvolvimento com o servidor Apache e banco relacional.
+- **Critério de Conclusão da Implantação Remota**: A publicação em ambiente de produção remoto só deve ser considerada formalmente concluída quando houver uma **URL pública funcional e ativa na internet**.
+- **Provedores de Hospedagem Compatíveis com a Stack LAMP**:
+  - Para a publicação definitiva do JIF+, recomenda-se o uso de provedores com suporte nativo a PHP 8.x e MySQL gerenciado, tais como:
+    1. **Alwaysdata** ou **InfinityFree**: Provedores com painel cPanel/phpMyAdmin, ideais para projetos acadêmicos em PHP e MySQL.
+    2. **Render** ou **Railway**: Publicação através de contêiner Docker contendo Apache, PHP e instância remota de banco MySQL/MariaDB.
+    3. **Servidor Institucional do IFRO**: Infraestrutura de servidores da Rede Federal.
+- **Configuração de Variáveis na Produção**: No servidor remoto, as credenciais de banco de dados devem ser preenchidas no painel de controle da hospedagem ou em arquivo `.env` protegido, assegurando conformidade com o RNF04.
+
+---
+
+## 16. Limitações Conhecidas e Melhorias Futuras
+
+O sistema cumpre integralmente todos os requisitos funcionais e critérios de aceitação previstos na especificação da Versão 1.0. Para versões futuras de expansão institucional, registram-se as seguintes oportunidades de melhoria planejadas:
+
+1. **Transmissão Lance a Lance em Tempo Real**:
+   - *Status*: Planejada para a versão 2.0.
+   - *Descrição*: Implementação de WebSockets ou *Server-Sent Events* (SSE) para atualização instantânea dos lances da súmula na tela do visitante sem necessidade de recarregar a página.
+2. **Gerador Automático de Chaveamento Eliminatório (Brackets)**:
+   - *Status*: Planejada para a versão 2.0.
+   - *Descrição*: Geração automatizada de árvores eliminatórias (quartas de final, semifinais e final) com base na classificação da fase de grupos.
+3. **Upload de Fotos para Armazenamento em Nuvem (CDN/S3)**:
+   - *Status*: Planejada para a versão 2.0.
+   - *Descrição*: Substituição dos caminhos de imagens locais por envio direto para serviços de armazenamento como Amazon S3 ou Cloudinary com recorte automático de imagens de atletas.
+4. **Exportação de Súmulas e Relatórios em PDF**:
+   - *Status*: Planejada para a versão 2.0.
+   - *Descrição*: Geração de relatórios oficiais das partidas e tabelas de classificação em formato PDF com cabeçalho institucional e assinatura digital do árbitro responsável.
+
+---
+
+## 17. Considerações Finais
+
+O desenvolvimento da plataforma **JIF+** consolidou na prática a aplicação das competências da disciplina de Desenvolvimento de Sistemas no IFRO — Campus Porto Velho Calama. Ao aliar o uso responsável e crítico de ferramentas de inteligência artificial à revisão humana constante, preservou-se a integridade do código, a conformidade rigorosa aos requisitos da especificação original e o respeito integral aos padrões de segurança em desenvolvimento web.
+
+O sistema entrega um ecossistema digital funcional, seguro e visualmente profissional para a gestão das competições esportivas da Rede Federal, eliminando a dependência de processos manuais e garantindo a perpetuação da memória esportiva dos estudantes-atletas do Instituto Federal de Rondônia.
+
+---
+
+## 18. Histórico de Versões
+
+| Versão | Data | Autor | Resumo das Modificações e Evoluções Registradas |
+| :---: | :---: | :--- | :--- |
+| **0.1** | Outubro de 2026 | Arthur Henrique Gimax Oliveira | Elaboração da proposta preliminar do sistema esportivo, identificação do problema e formulação dos objetivos iniciais. |
+| **0.5** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Definição da stack tecnológica oficial (PHP 8.2+, MySQL InnoDB, PDO), detalhamento dos requisitos RF01 a RF17, modelagem das 10 tabelas relacionais e estruturação do DER em Mermaid. |
+| **1.0 Final** | Novembro de 2026 | Arthur Henrique Gimax Oliveira | Versão final consolidada e homologada. Verificação completa de todos os requisitos funcionais em código-fonte, validação dos 17 critérios de aceitação (CA01 a CA17) em bateria de testes automatizados, auditoria de segurança (Anexo B), documentação do driver duplo (MySQL/SQLite) e formalização dos requisitos de implantação. |
