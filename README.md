@@ -162,7 +162,7 @@ Para rodar a suíte automatizada dos 17 critérios de aceite (requer PDO MySQL o
 ```bash
 C:\xampp\php\php.exe tests/test_full_suite.php
 ```
-O GitHub Actions concluiu com sucesso em 13/11/2026: verificação de sintaxe, conexão/tabelas, autenticação/RBAC e **17 de 17 critérios CA01–CA17 aprovados**, usando PHP 8.4 e MySQL 8.0.46. [Ver execução registrada](https://github.com/arthurgimax/JIF-/actions/runs/43461490652). A instalação em um computador limpo ainda deve ser conferida seguindo a seção 15 da spec.
+O GitHub Actions concluiu com sucesso em 13/11/2026: o workflow executou database/setup.php, verificou sintaxe PHP, conexão/tabelas, autenticação/RBAC e aprovou **17 de 17 critérios CA01–CA17**, usando PHP 8.4 e MySQL 8.0.46. [Ver execução registrada](https://github.com/arthurgimax/JIF-/actions/runs/43462038217). A instalação em um computador limpo ainda deve ser conferida seguindo a seção 15 da spec.
 
 ---
 
