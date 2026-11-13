@@ -1,5 +1,5 @@
 # JIF+ — Plataforma de Gestão e Inteligência Esportiva para os Jogos dos Institutos Federais
-## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.4 — Publicação e homologação manual)
+## Especificação de Requisitos e Arquitetura do Sistema (Versão 1.0.5 — Publicação, homologação e revisão de contas demonstrativas)
 
 ---
 
@@ -12,7 +12,7 @@
 - **Docente Responsável**: Prof. Rafael Pitwak
 - **Estudante Autor**: Arthur Henrique Gimax Oliveira
 - **Repositório Oficial**: [github.com/arthurgimax/JIF-](https://github.com/arthurgimax/JIF-)
-- **Versão do Documento**: 1.0.4 (publicação e homologação manual)
+- **Versão do Documento**: 1.0.5 (publicação, homologação e revisão de contas demonstrativas)
 - **Data da Revisão**: 13 de novembro de 2026
 
 ---
