@@ -5,7 +5,7 @@ A conferência abaixo separa revisão de código, testes automatizados executado
 | Item do Anexo B | Status nesta revisão | Evidência / observação |
 |---|---|---|
 | Senhas armazenadas com hash, nunca em texto puro | **Aprovado nos testes automatizados e no fluxo manual** | O código usa password_hash() e password_verify(). O teste CA01 foi aprovado no CI; a conta administrativa de produção foi criada com hash bcrypt e o login foi realizado com sucesso. |
-| Toda consulta ao banco usa parâmetros/prepared statements | **Testes automatizados aprovados; auditoria integral de código ainda recomendada** | O workflow CI passou pela suíte CA01–CA17 e a conexão PDO desativa emulação de prepared statements. A aprovação dos cenários automatizados não substitui revisão manual de todas as consultas e módulos. |
+| Toda consulta ao banco usa parâmetros/prepared statements | **Testes automatizados aprovados; auditoria integral de código ainda recomendada** | O workflow CI passou pela suíte CA01–CA17 e a conexão PDO desativa emulação de prepared statements. O banco temporário do workflow não utiliza senha fixa. A aprovação dos cenários automatizados não substitui revisão manual de todas as consultas e módulos. |
 | Todo campo de formulário validado no servidor | **Parcial** | O teste CA16 de rejeição de dados inválidos passou no CI. Ainda falta revisar todos os campos administrativos, limites, enumerações e consistência relacional de cada ação. |
 | Nenhuma senha, chave de API ou string de conexão commitada no código-fonte | **Pendente — histórico público contém dados de demonstração antigos** | O estado atual do repositório ignora .env e bancos locais e o .env.example atual contém apenas valores de exemplo. Entretanto, commits antigos do histórico público incluem credenciais de demonstração do seed/testes e um SESSION_SECRET estático de exemplo. O seed atual usa contas example.test inativas; o responsável confirmou que desativou os cinco usuários demonstrativos adicionais na produção. A limpeza do histórico Git continua pendente. |
 | Acesso restrito por tipo de usuário | **Teste automatizado aprovado; verificação adicional em produção pendente** | O teste CA03 de permissões RBAC passou no CI. O login administrativo e o acesso ao painel também foram confirmados na hospedagem. Ainda falta testar o bloqueio real usando uma conta sem privilégio no ambiente publicado. |
@@ -14,9 +14,9 @@ A conferência abaixo separa revisão de código, testes automatizados executado
 
 ## Testes automatizados executados
 
-O workflow do GitHub Actions [43462038217](https://github.com/arthurgimax/JIF-/actions/runs/43462038217) foi concluído com sucesso em 13/11/2026, no commit f8fdacfde7ace2ca41b8843b754f065654c19e1b.
+O workflow do GitHub Actions [43462527175](https://github.com/arthurgimax/JIF-/actions/runs/43462527175) foi concluído com sucesso em 13/11/2026, no commit 28698399268793b4272b2f42a003baabd7e134ed.
 
-- Ambiente: PHP 8.4 e MySQL 8.0.46.
+- Ambiente: PHP 8.4 e MySQL 8.0.46, com banco temporário isolado no runner e sem senha fixa.
 - Verificação de sintaxe PHP: aprovada.
 - Execução do instalador database/setup.php, criação/verificação do banco e aplicação do schema/seed: aprovadas.
 - Teste de conexão e leitura das tabelas: aprovado.
