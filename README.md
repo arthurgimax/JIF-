@@ -162,7 +162,7 @@ Para rodar a suíte automatizada dos 17 critérios de aceite (requer PDO MySQL o
 ```bash
 C:\xampp\php\php.exe tests/test_full_suite.php
 ```
-A suíte está disponível, mas o resultado precisa ser reexecutado no ambiente de entrega com as extensões PDO correspondentes ao banco configurado. Não considere os testes aprovados até registrar a saída real da execução.
+O GitHub Actions concluiu com sucesso em 13/11/2026: verificação de sintaxe, conexão/tabelas, autenticação/RBAC e **17 de 17 critérios CA01–CA17 aprovados**, usando PHP 8.4 e MySQL 8.0.46. [Ver execução registrada](https://github.com/arthurgimax/JIF-/actions/runs/43461490652). A instalação em um computador limpo ainda deve ser conferida seguindo a seção 15 da spec.
 
 ---
 
@@ -204,7 +204,7 @@ O JIF+ foi publicado no InfinityFree para esta atividade, mantendo a stack origi
 
 - O `.gitignore` exclui `.env` e arquivos locais de banco; o `.htaccess` contém regras para negar acesso direto a arquivos de ambiente e pastas internas. Ainda é necessário confirmar externamente que essas URLs retornam bloqueio (403/404), sem exibir conteúdo.
 - O responsável confirmou que desativou os cinco usuários demonstrativos adicionais no painel de produção, preservando a conta administrativa principal. O histórico público ainda contém credenciais fictícias de demonstração e um `SESSION_SECRET` de exemplo em commits antigos. Esses valores não são credenciais do banco de produção, mas continuam visíveis no histórico Git; para cumprir integralmente o requisito de não versionar credenciais, é necessária a limpeza do histórico.
-- A suíte automatizada de 17 critérios não foi executada nesta homologação; os testes manuais não substituem a execução completa.
+- A suíte automatizada CA01–CA17 foi aprovada no GitHub Actions (17/17) em 13/11/2026; a instalação em máquina limpa e os itens pendentes do checklist de segurança ainda precisam de homologação.
 - O checklist em [`tests/test_checklist.md`](./tests/test_checklist.md) registra o que foi verificado e as pendências: limpeza das credenciais fictícias no histórico Git, teste de permissões com perfil não administrador, validação completa dos formulários, proteção CSRF e limitação de tentativas de login.
 
 ---
