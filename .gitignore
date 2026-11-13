@@ -1,0 +1,16 @@
+# Arquivos de ambiente e credenciais locais (Anexo B)
+.env
+config.local.php
+
+# Arquivos temporários e logs
+*.log
+scratch/
+.system_generated/
+tmp/
+*.tmp
+
+# Caches e diretórios de IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
