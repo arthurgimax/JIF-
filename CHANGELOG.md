@@ -1,3 +1,26 @@
+## [1.0.7-install] — 13/11/2026 — Guia reproduzível de instalação local
+
+### Documentação adicionada e revisada
+- Atualizada a seção de instalação da spec.md para atender ao roteiro de avaliação: ambiente, versão do PHP, XAMPP/Apache, SGBD, dependências, variáveis de ambiente, comandos de instalação, primeiro administrador de teste e roteiro do fluxo principal.
+- Registradas as 10 tabelas existentes em database/schema.sql com campos principais, chave primária e relacionamentos por chave estrangeira.
+- Documentados o papel de database/seed.sql e o comportamento do instalador database/setup.php: criação do banco jif_plus, criação não destrutiva das tabelas e carga inicial apenas quando a tabela usuarios está vazia.
+- Atualizado o README para apontar para o procedimento reproduzível da spec e corrigido o endereço-base do .env.example para a pasta clonada JIF-.
+- Confirmado por consulta de permissão do GitHub que rafaelpitwak possui permissão write no repositório arthurgimax/JIF-.
+
+### Revisão humana e decisões
+- Mantida a stack PHP + PDO + MySQL/MariaDB e o ambiente local XAMPP, pois correspondem ao código existente e evitam migração desnecessária.
+- Não foram adicionadas dependências Composer/npm: o projeto usa PHP/PDO e frontend nativo.
+- O guia orienta a criação de um administrador com hash bcrypt próprio; não publica senha de acesso nem credenciais reais.
+- O roteiro diferencia o que já foi confirmado manualmente do que ainda depende de execução dos testes e verificações de segurança.
+
+### Validação e limites desta revisão
+- Conferidos no repositório os arquivos .env.example, database/schema.sql, database/seed.sql, database/setup.php, config/database.php, spec.md, README.md e tests/test_checklist.md.
+- Confirmada a presença das 10 tabelas e das chaves estrangeiras no schema.
+- Esta alteração foi documental. A instalação em uma máquina limpa e a suíte automatizada não foram executadas novamente durante esta revisão; os itens pendentes continuam indicados no checklist de segurança.
+- O histórico Git antigo ainda contém valores de demonstração e um segredo estático de exemplo, conforme já registrado nas versões anteriores; a limpeza do histórico permanece pendente.
+
+---
+
 # CHANGELOG — JIF+ (Plataforma de Gestão e Inteligência Esportiva)
 
 Registro histórico de decisões arquiteturais, alterações, revisões humanas e implementação do projeto acadêmico conforme a metodologia da apostila *"Programar com IA de forma responsável"* (Prof. Rafael Pitwak — IFRO Campus Porto Velho Calama).
