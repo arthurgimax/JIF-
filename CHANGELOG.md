@@ -1,3 +1,18 @@
+## [1.0.10-ci-security] — 13/11/2026 — CI sem senha fixa no banco de testes
+
+### Ajuste de segurança e validação
+- Removida a senha estática root do serviço MySQL do GitHub Actions.
+- O banco de testes agora usa MYSQL_ALLOW_EMPTY_PASSWORD no container efêmero e DB_PASS vazio no arquivo .env temporário do runner; nenhum dado de produção é utilizado.
+- Execução [43462527175](https://github.com/arthurgimax/JIF-/actions/runs/43462527175) concluída com sucesso no commit 28698399268793b4272b2f42a003baabd7e134ed.
+- O workflow executou database/setup.php, verificou sintaxe PHP, conexão/tabelas, autenticação/RBAC e aprovou 17 de 17 critérios CA01–CA17 com PHP 8.4 e MySQL 8.0.46.
+
+### Revisão humana e limites
+- A configuração de CI foi revisada para não manter senha fixa no código do workflow; o ambiente é temporário e isolado.
+- As pendências históricas de valores antigos de demonstração e de homologação completa do Anexo B continuam descritas em tests/test_checklist.md.
+- A instalação em computador Windows limpo ainda deve ser conferida por uma pessoa externa seguindo somente a seção 15 da spec.
+
+---
+
 ## [1.0.9-ci-install] — 13/11/2026 — Validação do instalador documentado no CI
 
 ### Alteração na integração contínua
