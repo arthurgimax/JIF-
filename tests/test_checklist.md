@@ -1,16 +1,27 @@
 # Checklist de Segurança — Anexo B da apostila
 
-A conferência abaixo separa revisão de código, testes manuais executados na hospedagem e itens que continuam pendentes. Não se declara conformidade total sem evidência.
+A conferência abaixo separa revisão de código, testes automatizados executados no GitHub Actions, testes manuais na hospedagem e itens que continuam pendentes. A aprovação dos testes de aceite não significa que todos os controles de segurança foram integralmente homologados.
 
 | Item do Anexo B | Status nesta revisão | Evidência / observação |
 |---|---|---|
-| Senhas armazenadas com hash, nunca em texto puro | **Conforme no fluxo exercitado; revisão final pendente** | O código usa `password_hash()` e `password_verify()`. A conta administrativa foi criada com hash bcrypt e o login foi realizado com sucesso na hospedagem. Não se registra nem se publica a senha original. |
-| Toda consulta ao banco usa parâmetros/prepared statements | **Conforme na revisão de código; auditoria integral pendente** | A conexão PDO desativa emulação de prepared statements e as consultas que recebem valores externos usam parâmetros. Ainda é recomendável revisar todos os módulos e executar a suíte automatizada. |
-| Todo campo de formulário validado no servidor | **Parcial** | O cadastro público valida nome, e-mail e senha; os módulos administrativos têm validações principais, mas falta revisão completa de limites, enumerações e consistência relacional em todas as ações. |
-| Nenhuma senha, chave de API ou string de conexão commitada no código-fonte | **Pendente — histórico público contém dados de demonstração antigos** | O estado atual do repositório ignora `.env` e bancos locais, e não contém o arquivo de produção. Entretanto, commits antigos do histórico público incluem credenciais de demonstração do seed/testes e um `SESSION_SECRET` estático de exemplo em `.env.example`. O seed atual usa contas `example.test` inativas e a suíte atual gera credenciais aleatórias. O responsável confirmou que desativou os cinco usuários demonstrativos adicionais no painel de produção, preservando sua conta principal. Também é necessário decidir a limpeza do histórico ou a restrição do repositório com acesso liberado ao professor. |
-| Acesso restrito por tipo de usuário | **Parcialmente verificado** | O login administrativo e o acesso ao painel foram confirmados na hospedagem; o código protege rotas com `exigirAutenticacao()`. Ainda falta testar o bloqueio real usando uma conta sem privilégio. |
-| Mensagens de erro não expõem detalhes internos | **Conforme no código; teste remoto pendente** | A conexão registra detalhes em log e apresenta mensagens genéricas. Ainda falta provocar erros controlados na hospedagem para verificar a resposta exibida ao visitante. |
+| Senhas armazenadas com hash, nunca em texto puro | **Aprovado nos testes automatizados e no fluxo manual** | O código usa password_hash() e password_verify(). O teste CA01 foi aprovado no CI; a conta administrativa de produção foi criada com hash bcrypt e o login foi realizado com sucesso. |
+| Toda consulta ao banco usa parâmetros/prepared statements | **Testes automatizados aprovados; auditoria integral de código ainda recomendada** | O workflow CI passou pela suíte CA01–CA17 e a conexão PDO desativa emulação de prepared statements. A aprovação dos cenários automatizados não substitui revisão manual de todas as consultas e módulos. |
+| Todo campo de formulário validado no servidor | **Parcial** | O teste CA16 de rejeição de dados inválidos passou no CI. Ainda falta revisar todos os campos administrativos, limites, enumerações e consistência relacional de cada ação. |
+| Nenhuma senha, chave de API ou string de conexão commitada no código-fonte | **Pendente — histórico público contém dados de demonstração antigos** | O estado atual do repositório ignora .env e bancos locais e o .env.example atual contém apenas valores de exemplo. Entretanto, commits antigos do histórico público incluem credenciais de demonstração do seed/testes e um SESSION_SECRET estático de exemplo. O seed atual usa contas example.test inativas; o responsável confirmou que desativou os cinco usuários demonstrativos adicionais na produção. A limpeza do histórico Git continua pendente. |
+| Acesso restrito por tipo de usuário | **Teste automatizado aprovado; verificação adicional em produção pendente** | O teste CA03 de permissões RBAC passou no CI. O login administrativo e o acesso ao painel também foram confirmados na hospedagem. Ainda falta testar o bloqueio real usando uma conta sem privilégio no ambiente publicado. |
+| Mensagens de erro não expõem detalhes internos | **Conforme na revisão de código; teste remoto pendente** | A conexão registra detalhes em log e apresenta mensagens genéricas. Ainda falta provocar erros controlados na hospedagem para verificar a resposta exibida ao visitante. |
 | HTTPS ativo | **Conforme por confirmação visual do responsável** | O responsável confirmou que, em janela anônima, o navegador passou a exibir conexão segura (HTTPS) em 13/11/2026. |
+
+## Testes automatizados executados
+
+O workflow do GitHub Actions [43461490652](https://github.com/arthurgimax/JIF-/actions/runs/43461490652) foi concluído com sucesso em 13/11/2026, no commit 21128e071c72d394dd39d62e2c7f73ee8d90a086.
+
+- Ambiente: PHP 8.4 e MySQL 8.0.46.
+- Verificação de sintaxe PHP: aprovada.
+- Preparação do banco MySQL e importação do schema/seed: aprovadas.
+- Teste de conexão e leitura das tabelas: aprovado.
+- Teste de autenticação e RBAC: aprovado.
+- Suíte CA01–CA17: **17 de 17 critérios aprovados**.
 
 ## Testes manuais já realizados na hospedagem
 
@@ -19,15 +30,15 @@ A conferência abaixo separa revisão de código, testes manuais executados na h
 - Cadastro de um atleta fictício pelo painel administrativo.
 - O atleta de teste apareceu na listagem pública do BID, confirmando gravação e leitura do registro no MySQL remoto.
 - O phpMyAdmin exibiu as 10 tabelas previstas.
+- HTTPS confirmado visualmente pelo responsável em janela anônima.
 
 ## Verificações pendentes antes da entrega
 
-- A desativação dos cinco usuários demonstrativos adicionais foi confirmada pelo responsável; a conta administrativa principal foi preservada.
-- Limpar o histórico Git para remover credenciais fictícias de demonstração e o `SESSION_SECRET` de exemplo dos commits antigos; a versão atual não deve voltar a incluir esses valores.
-- Confirmar que uma requisição direta a `/.env` e a `/config/database.php` é bloqueada e não revela conteúdo.
-- HTTPS foi confirmado visualmente em janela anônima pelo responsável.
-- Testar o bloqueio de uma rota administrativa com usuário sem privilégios.
-- Executar `php tests/test_full_suite.php` com PDO MySQL e registrar o resultado real.
+- Limpar o histórico Git para remover credenciais fictícias de demonstração e o SESSION_SECRET de exemplo dos commits antigos; a versão atual não deve voltar a incluir esses valores.
+- Confirmar que uma requisição direta a /.env e a /config/database.php é bloqueada e não revela conteúdo.
+- Testar o bloqueio de uma rota administrativa no ambiente publicado usando usuário sem privilégios. O cenário RBAC automatizado passou no CI.
+- Executar o roteiro de instalação da seção 15 da spec em um computador limpo, sem reaproveitar o banco ou a pasta local do autor.
+- Revisar integralmente a validação de todos os campos administrativos.
 
 ## Melhorias adicionais recomendadas
 
